@@ -1,0 +1,55 @@
+import {Geo} from "../api/core/Geo";
+import {BillboardCollection} from "cesium";
+import {GeoLayer} from "../api/layers/GeoLayer";
+import {CesiumLayer} from "./CesiumLayer";
+import {GeoPrimitive} from "../api/primitives/GeoPrimitive";
+import {CesiumLink} from "./CesiumLink";
+import {CesiumSetup} from "./CesiumSetup";
+
+export class CesiumGeo extends CesiumSetup implements Geo {
+
+    constructor(domElement:HTMLDivElement, lon:number, lat:number, size:number) {
+        super(domElement,lon, lat, size);
+    }
+
+     addBillboardCollection(geoPrimitive: GeoPrimitive, data:any[]){
+        let bc = new BillboardCollection();
+        data.forEach(d => bc.add(d));
+        this.cesium.scene.primitives.add(bc);
+        (<CesiumLink>geoPrimitive.link).billboardCollection = bc;
+    }
+
+     removeBillboardCollection(geoPrimitive: GeoPrimitive) {
+        let link = <CesiumLink>geoPrimitive.link;
+        this.cesium.scene.primitives.remove(link.billboardCollection)
+        link.billboardCollection = null;
+    }
+
+    addLayer(layer: GeoLayer): void {
+        if (layer.added)
+            return
+        let cesiumLayer = <CesiumLayer>layer;
+        this.cesium.dataSources.add(cesiumLayer.dataSource);
+        [...cesiumLayer.billboardCollectionsData.keys()].forEach(geoPrimitive => {
+            this.addBillboardCollection(geoPrimitive,
+                cesiumLayer.billboardCollectionsData.get(geoPrimitive));
+        });
+        layer.added = true;
+    }
+
+    removeLayer(layer: GeoLayer): void {
+        if (!layer.added)
+            return
+        let cesiumLayer = <CesiumLayer>layer;
+        this.cesium.dataSources.remove(cesiumLayer.dataSource);
+        [...cesiumLayer.billboardCollectionsData.keys()].forEach(geoPrimitive => {
+            this.removeBillboardCollection(geoPrimitive);
+        });
+        layer.added = false
+    }
+
+    createLayer(): GeoLayer {
+        return new CesiumLayer(this);
+    }
+
+}

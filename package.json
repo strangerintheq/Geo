@@ -1,0 +1,21 @@
+{
+  "name": "geo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/ellipse": "^5.1.5",
+    "cesium": "^1.71.0",
+    "esbuild": "^0.6.12",
+    "http": "0.0.1-security",
+    "https": "^1.0.0",
+    "turf-point": "^2.0.1",
+    "url": "^0.11.0",
+    "zlib": "^1.0.5"
+  }
+}
