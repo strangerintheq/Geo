@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="" />
+    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +34,9 @@
         <option value="TypeScript File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1fOnKV7QfKyCxABYdRtw0DbR6YH" />
   <component name="ProjectViewState">
@@ -81,7 +102,8 @@
       <workItem from="1596540459815" duration="11196000" />
       <workItem from="1596560610705" duration="3268000" />
       <workItem from="1596566471480" duration="811000" />
-      <workItem from="1596617978474" duration="20332000" />
+      <workItem from="1596617978474" duration="20371000" />
+      <workItem from="1596653634305" duration="72000" />
     </task>
     <servers />
   </component>
@@ -128,6 +150,29 @@
       </list>
     </option>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
     <state x="718" y="165" key="#com.intellij.ide.util.MemberChooser" timestamp="1596544402761">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -141,22 +186,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="624" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1596212071096" />
-    <state width="1887" height="290" key="GridCell.Tab.0.bottom" timestamp="1596653519227">
+    <state x="634" y="154" key="FileChooserDialogImpl" timestamp="1596653619233">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1596653519227" />
-    <state width="1887" height="290" key="GridCell.Tab.0.center" timestamp="1596653519227">
+    <state x="634" y="154" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1596653619233" />
+    <state width="1887" height="290" key="GridCell.Tab.0.bottom" timestamp="1596653622026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1596653519227" />
-    <state width="1887" height="290" key="GridCell.Tab.0.left" timestamp="1596653519226">
+    <state width="1887" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1596653622026" />
+    <state width="1887" height="290" key="GridCell.Tab.0.center" timestamp="1596653622026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1596653519226" />
-    <state width="1887" height="290" key="GridCell.Tab.0.right" timestamp="1596653519227">
+    <state width="1887" height="290" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1596653622026" />
+    <state width="1887" height="290" key="GridCell.Tab.0.left" timestamp="1596653622026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1596653519227" />
+    <state width="1887" height="290" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1596653622026" />
+    <state width="1887" height="290" key="GridCell.Tab.0.right" timestamp="1596653622026">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1887" height="290" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1596653622026" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1596627497034">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

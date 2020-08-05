@@ -4,11 +4,11 @@ import {
     PolylineGlowMaterialProperty,
 } from "cesium";
 
-import {GeoLayer} from "../api/layers/GeoLayer";
-import {GeoPrimitive} from "../api/primitives/GeoPrimitive";
-import {GeoPrimitiveType} from "../api/primitives/GeoPrimitiveType";
+import {GeoLayer} from "../api/core/GeoLayer";
+import {GeoPrimitive} from "../api/core/GeoPrimitive";
+import {GeoPrimitiveType} from "../api/core/GeoPrimitiveType";
 import {Line} from "../api/primitives/Line";
-import {Link} from "../api/primitives/Link";
+import {Link} from "../api/core/Link";
 import {CesiumLink} from "./CesiumLink";
 import {PointSet} from "../api/primitives/PointSet";
 import {Area} from "../api/primitives/Area";

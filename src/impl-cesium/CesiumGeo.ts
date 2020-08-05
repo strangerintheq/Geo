@@ -1,8 +1,8 @@
 import {Geo} from "../api/core/Geo";
 import {BillboardCollection} from "cesium";
-import {GeoLayer} from "../api/layers/GeoLayer";
+import {GeoLayer} from "../api/core/GeoLayer";
 import {CesiumLayer} from "./CesiumLayer";
-import {GeoPrimitive} from "../api/primitives/GeoPrimitive";
+import {GeoPrimitive} from "../api/core/GeoPrimitive";
 import {CesiumLink} from "./CesiumLink";
 import {CesiumSetup} from "./CesiumSetup";
 

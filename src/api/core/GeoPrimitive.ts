@@ -1,5 +1,5 @@
 import {GeoPrimitiveType} from "./GeoPrimitiveType";
-import {Coordinate} from "../core/Coordinate";
+import {Coordinate} from "./Coordinate";
 import {Link} from "./Link";
 
 export abstract class GeoPrimitive {

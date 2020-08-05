@@ -1,4 +1,4 @@
-import {GeoObject} from "./GeoObject";
+import {GeoObject} from "../core/GeoObject";
 import {Coordinate} from "../core/Coordinate";
 import {Line} from "../primitives/Line";
 import {PointSet} from "../primitives/PointSet";

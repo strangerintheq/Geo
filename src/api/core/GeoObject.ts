@@ -1,4 +1,4 @@
-import {GeoPrimitive} from "../primitives/GeoPrimitive";
+import {GeoPrimitive} from "./GeoPrimitive";
 
 export abstract class GeoObject {
 

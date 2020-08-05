@@ -1,6 +1,6 @@
-import {GeoObject} from "../objects/GeoObject";
-import {GeoPrimitive} from "../primitives/GeoPrimitive";
-import {Link} from "../primitives/Link";
+import {GeoObject} from "./GeoObject";
+import {GeoPrimitive} from "./GeoPrimitive";
+import {Link} from "./Link";
 
 export abstract class GeoLayer {
 

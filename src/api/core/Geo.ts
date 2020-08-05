@@ -1,4 +1,4 @@
-import {GeoLayer} from "../layers/GeoLayer";
+import {GeoLayer} from "./GeoLayer";
 
 export interface Geo {
     createLayer(): GeoLayer;

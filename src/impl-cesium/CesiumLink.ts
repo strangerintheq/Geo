@@ -1,6 +1,6 @@
-import {Link} from "../api/primitives/Link";
+import {Link} from "../api/core/Link";
 import {BillboardCollection, Entity} from "cesium";
-import {GeoPrimitive} from "../api/primitives/GeoPrimitive";
+import {GeoPrimitive} from "../api/core/GeoPrimitive";
 import {CesiumGeo} from "./CesiumGeo";
 
 export class CesiumLink implements Link {

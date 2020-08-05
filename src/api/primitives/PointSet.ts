@@ -1,6 +1,6 @@
-import {GeoPrimitive} from "./GeoPrimitive";
+import {GeoPrimitive} from "../core/GeoPrimitive";
 import {Coordinate} from "../core/Coordinate";
-import {GeoPrimitiveType} from "./GeoPrimitiveType";
+import {GeoPrimitiveType} from "../core/GeoPrimitiveType";
 
 export class PointSet extends GeoPrimitive {
 
