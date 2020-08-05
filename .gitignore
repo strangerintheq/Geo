@@ -1,5 +1,6 @@
 /src/**/*.js
 /src/**/*.map
-/node_modules
-/estimation
-/dist
+node_modules
+estimation
+dist
+.idea
