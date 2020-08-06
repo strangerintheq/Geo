@@ -8,7 +8,6 @@ import {
     Viewer
 } from "cesium";
 
-
 export class CesiumSetup {
 
     readonly cesium: Viewer;
@@ -21,6 +20,7 @@ export class CesiumSetup {
         this.translateTextMonkeyPatch();
         this.listenerForImageryChangeCrutch();
         this.hideUnnecessaryElements();
+
     }
 
     protected disableEntitySelection() {

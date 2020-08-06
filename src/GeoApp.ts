@@ -19,10 +19,11 @@ layer1.addObject(scatteringEllipse);
 
 
 let layer2 = geo.createLayer();
+
 let trajectory = new Trajectory(trajectoryData(lon, lat));
 trajectory.pointSet.image = SVG.dot('blue');
 layer2.addObject(trajectory);
-
+geo.addLayer(layer2);
 
 let layer3 = geo.createLayer();
 geo.addLayer(layer3);
@@ -30,21 +31,21 @@ let tr2 = new Trajectory(trajectoryData(lon+2, lat+2));
 tr2.pointSet.image = SVG.dot('green');
 layer3.addObject(tr2);
 
-let toggle = false;
-
-setInterval(() => {
-    toggle = !toggle;
-    if (toggle){
-        geo.addLayer(layer2)
-        geo.removeLayer(layer1)
-
-    } else {
-        geo.removeLayer(layer2)
-        geo.addLayer(layer1)
-    }
-    tr2.setVisible(!toggle)
-
-},1000)
+// let toggle = false;
+//
+// setInterval(() => {
+//     toggle = !toggle;
+//     if (toggle){
+//         geo.addLayer(layer2)
+//         geo.removeLayer(layer1)
+//
+//     } else {
+//         geo.removeLayer(layer2)
+//         geo.addLayer(layer1)
+//     }
+//     tr2.setVisible(!toggle)
+//
+// },1000)
 
 
 function trajectoryData(lon, lat): Coordinate[] {

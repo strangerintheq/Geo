@@ -1,6 +1,6 @@
 import {
     Cartesian3,
-    Color, CustomDataSource, DataSource, NearFarScalar,
+    Color, CustomDataSource, DataSource, Entity, NearFarScalar,
     PolylineGlowMaterialProperty,
 } from "cesium";
 
@@ -45,52 +45,49 @@ export class CesiumLayer extends GeoLayer {
 
     }
 
-    cesiumTitle(title: Title):CesiumLink{
+
+    private addLinkedEntity(entityData: any): CesiumLink {
+        let entity = this.dataSource.entities.add(entityData);
         let cesiumLink = new CesiumLink(this.cesiumGeo);
-        cesiumLink.entity = this.dataSource.entities.add({
+        cesiumLink.entity = entity;
+        return cesiumLink;
+    }
+
+    private cesiumTitle(title: Title): CesiumLink{
+        return this.addLinkedEntity({
             position: DegreesToCartesian3(title.coordinates[0]),
             label: {
                 scaleByDistance: new NearFarScalar(1.5e2, .5, 1.5e7, .1),
                 text: title.text,
             },
+        })
+    }
+
+    private cesiumPolygon(area: Area): CesiumLink {
+        return this.addLinkedEntity({
+            mouseOverText: area.tooltip,
+            polygon: {
+                hierarchy: area.coordinates.map(DegreesToCartesian3),
+                material : Cesium.Color.RED.withAlpha(0.5),
+            }
         });
-        return cesiumLink
     }
 
-    cesiumPolygon(polygon: Area):CesiumLink {
-
-        let polygonData = {
-            hierarchy: polygon.coordinates.map(DegreesToCartesian3),
-            material : Cesium.Color.RED.withAlpha(0.5),
-        };
-
-        let polygonEntityData = {polygon :polygonData};
-        // @ts-ignore
-        let entity = this.dataSource.entities.add(polygonEntityData);
-
-        let cesiumLink = new CesiumLink(this.cesiumGeo);
-        cesiumLink.entity = entity;
-        return cesiumLink;
+    private cesiumLine(line: Line): CesiumLink {
+        return this.addLinkedEntity({
+            mouseOverText: line.tooltip,
+            polyline: {
+                positions: line.coordinates.map(DegreesToCartesian3),
+                width: 5.0,
+                material: new PolylineGlowMaterialProperty({
+                    color: new Color(1,0,0),
+                    glowPower: 0.2
+                })
+            }
+        });
     }
 
-    cesiumLine(line: Line): CesiumLink {
-
-        let polyline = {
-            positions: line.coordinates.map(DegreesToCartesian3),
-            width: 5.0,
-            material: new PolylineGlowMaterialProperty({
-                color: new Color(1,0,0),
-                glowPower: 0.2
-            })
-        };
-
-        let entity = this.dataSource.entities.add({polyline});
-        let cesiumLink = new CesiumLink(this.cesiumGeo);
-        cesiumLink.entity = entity;
-        return cesiumLink;
-    }
-
-    cesiumPointSet(pointSet: PointSet): CesiumLink {
+    private cesiumPointSet(pointSet: PointSet): CesiumLink {
 
         let billboardCollectionData = pointSet.coordinates.map(coordinate => ({
             position: DegreesToCartesian3(coordinate),

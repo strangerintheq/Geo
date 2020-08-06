@@ -5,15 +5,19 @@ import {CesiumLayer} from "./CesiumLayer";
 import {GeoPrimitive} from "../api/core/GeoPrimitive";
 import {CesiumLink} from "./CesiumLink";
 import {CesiumSetup} from "./CesiumSetup";
+import {MouseOverSupport} from "./MouseOverSupport";
 
 export class CesiumGeo extends CesiumSetup implements Geo {
 
     constructor(domElement:HTMLDivElement, lon:number, lat:number, size:number) {
         super(domElement,lon, lat, size);
+        new MouseOverSupport(this.cesium)
     }
 
      addBillboardCollection(geoPrimitive: GeoPrimitive, data:any[]){
         let bc = new BillboardCollection();
+        if (geoPrimitive.tooltip)
+            bc['mouseOverText'] = geoPrimitive.tooltip;
         data.forEach(d => bc.add(d));
         this.cesium.scene.primitives.add(bc);
         (<CesiumLink>geoPrimitive.link).billboardCollection = bc;

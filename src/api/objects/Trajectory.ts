@@ -11,10 +11,13 @@ export class Trajectory extends GeoObject {
     constructor(coordinates: Coordinate[]) {
         super();
 
-        this.line = new Line(coordinates);
+        let tooltip = "Траектория";
+        this.line = new Line(coordinates, tooltip);
+        this.line.tooltip = "Траектория"
         this.primitives.push(this.line);
 
-        this.pointSet = new PointSet(coordinates);
+        this.pointSet = new PointSet(coordinates, tooltip);
+        this.pointSet.tooltip = "Траектория"
         this.primitives.push(this.pointSet)
     }
 

@@ -14,9 +14,14 @@ export class ScatteringEllipse extends GeoObject {
         super();
 
         let coordinates: Coordinate[] = this.calcEllipse(center, azimuthDeg, ao, bo);
-        this.primitives.push(new Line(coordinates));
-        this.primitives.push(new Area(coordinates));
-        this.primitives.push(new Title(center, "Эллипс рассеивания"))
+        let text = "Эллипс рассеивания";
+        let line = new Line(coordinates);
+        line.tooltip = text;
+        this.primitives.push(line);
+        let area = new Area(coordinates);
+        area.tooltip = text;
+        this.primitives.push(area);
+        this.primitives.push(new Title(center, text))
     }
 
     private calcEllipse(center: Coordinate, azimuthDeg:number, ao:number, bo:number): Coordinate[] {
