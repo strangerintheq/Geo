@@ -4,7 +4,7 @@ import {Link} from "./Link";
 
 export abstract class GeoPrimitive {
 
-    readonly type: GeoPrimitiveType;
+    type: GeoPrimitiveType;
     image: string;
     text: string;
     link: Link;

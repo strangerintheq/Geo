@@ -1,7 +1,8 @@
 import {
+    CallbackProperty,
     Cartesian3,
-    Color, CustomDataSource, DataSource, Entity, NearFarScalar,
-    PolylineGlowMaterialProperty,
+    Color, CustomDataSource, DataSource, Entity, HeadingPitchRoll, HeightReference, NearFarScalar,
+    PolylineGlowMaterialProperty, Transforms,
 } from "cesium";
 
 import {GeoLayer} from "../api/core/GeoLayer";
@@ -12,9 +13,9 @@ import {Link} from "../api/core/Link";
 import {CesiumLink} from "./CesiumLink";
 import {PointSet} from "../api/primitives/PointSet";
 import {Area} from "../api/primitives/Area";
-import * as Cesium from "cesium";
 import {CesiumGeo} from "./CesiumGeo";
 import {Title} from "../api/primitives/Title";
+import {Model} from "../api/primitives/Model";
 
 export class CesiumLayer extends GeoLayer {
 
@@ -39,6 +40,9 @@ export class CesiumLayer extends GeoLayer {
 
         if (geoPrimitive.type === GeoPrimitiveType.TITLE)
             return this.cesiumTitle(<Title>geoPrimitive)
+
+        if (geoPrimitive.type === GeoPrimitiveType.MODEL)
+            return this.cesiumModel(<Model>geoPrimitive)
     }
 
     removePrimitive(primitive: GeoPrimitive): void {
@@ -68,7 +72,7 @@ export class CesiumLayer extends GeoLayer {
             mouseOverText: area.tooltip,
             polygon: {
                 hierarchy: area.coordinates.map(DegreesToCartesian3),
-                material : Cesium.Color.RED.withAlpha(0.5),
+                material : Color.RED.withAlpha(0.5),
             }
         });
     }
@@ -102,6 +106,33 @@ export class CesiumLayer extends GeoLayer {
         return cesiumLink;
     }
 
+    private cesiumModel(model: Model) {
+        let heightReference = false ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE;
+        let k = Math.PI/180;
+        return this.addLinkedEntity({
+
+            position: new CallbackProperty(() => {
+                return DegreesToCartesian3(model.coordinates[0])
+            }, false),
+
+            orientation: new CallbackProperty(() => {
+                let position = DegreesToCartesian3(model.coordinates[0]);
+                let heading =  (model.heading + model.course)*k;
+                let pitch = model.pitch*k;
+                let roll = model.roll*k;
+                let headingPitchRoll = new HeadingPitchRoll( heading, pitch, roll);
+                return Transforms.headingPitchRollQuaternion(position, headingPitchRoll);
+            }, false),
+
+            model: {
+                uri: model.url,
+                scale: 0.01,
+                minimumPixelSize: 64,
+                maximumScale: 500,
+                heightReference
+            }
+        });
+    }
 }
 
 

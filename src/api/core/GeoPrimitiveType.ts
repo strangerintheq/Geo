@@ -1,7 +1,8 @@
 export enum GeoPrimitiveType {
-    POINT,
-    POINT_SET,
-    LINE,
-    AREA,
-    TITLE
+    POINT = "Point",
+    POINT_SET = "PointSet",
+    LINE = "Line",
+    AREA = "Area",
+    TITLE = "Title",
+    MODEL = "Model",
 }

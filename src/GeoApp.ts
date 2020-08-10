@@ -4,6 +4,7 @@ import {ScatteringEllipse} from "./api/objects/ScatteringEllipse";
 import {Trajectory} from "./api/objects/Trajectory";
 import {Coordinate} from "./api/core/Coordinate";
 import SVG from "./api/core/InlineSVG";
+import {Model} from "./api/primitives/Model";
 
 window['CESIUM_BASE_URL'] = 'http://localhost:63342/Geo/dist/Cesium';
 
@@ -31,6 +32,27 @@ let tr2 = new Trajectory(trajectoryData(lon+2, lat+2));
 tr2.pointSet.image = SVG.dot('green');
 layer3.addObject(tr2);
 
+
+let layer4 = geo.createLayer();
+
+let model = new Model(new Coordinate(lon-1, lat-1), "Cesium_Air.glb");
+model.course = 0;
+layer4.addPrimitive(model)
+geo.addLayer(layer4);
+
+
+requestAnimationFrame(function upd(t){
+
+    let c = model.coordinates;
+    c[0][0] = lon + Math.cos(t/1000)
+    c[0][1] = lat + Math.sin(t/1000)
+    c[0][2] = 10000 + Math.sin(t/1000)*3000
+    model.course = -90-180/Math.PI*Math.atan2(
+        (c[0][1]-lat),
+        (c[0][0]-lon)
+    )
+    requestAnimationFrame(upd)
+})
 // let toggle = false;
 //
 // setInterval(() => {
