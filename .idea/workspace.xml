@@ -16,20 +16,18 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="gitignore">
-      <change afterPath="$PROJECT_DIR$/src/impl-cesium/MouseOverSupport.ts" afterDir="false" />
+    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="models implemented">
+      <change afterPath="$PROJECT_DIR$/src/api/core/GeoLayerBase.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/editor/EditorMode.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/editor/GeoEditor.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GeoApp.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/GeoApp.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/core/GeoPrimitive.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/core/GeoPrimitive.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/objects/ScatteringEllipse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/objects/ScatteringEllipse.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/objects/Trajectory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/objects/Trajectory.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/primitives/Area.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/primitives/Area.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/primitives/Line.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/primitives/Line.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/primitives/Point.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/primitives/Point.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/primitives/PointSet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/primitives/PointSet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/core/Geo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/core/Geo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/core/GeoLayer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/core/GeoLayer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/objects/ScreenLabel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/objects/ScreenLabel.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/impl-cesium/CesiumGeo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/CesiumGeo.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/impl-cesium/CesiumLayer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/CesiumLayer.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/impl-cesium/CesiumSetup.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/CesiumSetup.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,9 +54,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="JSInitializeFieldsIntentionBase.visibility" value="private" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/impl-cesium" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dist" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -70,17 +69,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Stranger_in_the_Q\Desktop\Geo\dist" />
       <recent name="C:\Users\Stranger_in_the_Q\Desktop\Geo\src\impl-cesium" />
       <recent name="C:\Users\Stranger_in_the_Q\Desktop\Geo\src\api\core" />
       <recent name="C:\Users\kbalashev\WebstormProjects\Geo" />
       <recent name="C:\Users\kbalashev\WebstormProjects\Geo\dist" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Stranger_in_the_Q\Desktop\Geo\src\api\editor" />
       <recent name="C:\Users\Stranger_in_the_Q\Desktop\Geo\src\api\core" />
       <recent name="C:\Users\kbalashev\WebstormProjects\Geo\src\api\core" />
       <recent name="C:\Users\kbalashev\WebstormProjects\Geo\src\api\layers" />
       <recent name="C:\Users\kbalashev\WebstormProjects\Geo\src\api\objects" />
-      <recent name="C:\Users\kbalashev\WebstormProjects\Geo\dist\Cesium" />
     </key>
   </component>
   <component name="RunManager">
@@ -116,7 +116,10 @@
       <workItem from="1596566471480" duration="811000" />
       <workItem from="1596617978474" duration="20371000" />
       <workItem from="1596653634305" duration="658000" />
-      <workItem from="1596703310526" duration="5910000" />
+      <workItem from="1596703310526" duration="7761000" />
+      <workItem from="1597045747081" duration="1253000" />
+      <workItem from="1597053141489" duration="7588000" />
+      <workItem from="1597135494124" duration="8015000" />
     </task>
     <task id="LOCAL-00001" summary="organize code">
       <created>1596653780099</created>
@@ -132,7 +135,21 @@
       <option name="project" value="LOCAL" />
       <updated>1596653816582</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="tooltips">
+      <created>1596709381869</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1596709381869</updated>
+    </task>
+    <task id="LOCAL-00004" summary="models implemented">
+      <created>1597056936154</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1597056936154</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,13 +220,19 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="organize code" />
     <MESSAGE value="gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore" />
+    <MESSAGE value="tooltips" />
+    <MESSAGE value="models implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="models implemented" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="718" y="165" key="#com.intellij.ide.util.MemberChooser" timestamp="1596544402761">
+    <state x="583" y="279" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597055657550">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="718" y="165" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1596544402761" />
+    <state x="583" y="279" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1597055657550" />
+    <state x="718" y="165" key="#com.intellij.ide.util.MemberChooser" timestamp="1597151690594">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="718" y="165" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1597151690594" />
     <state x="597" y="176" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1596636064564">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -222,26 +245,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="634" y="154" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1596653619233" />
-    <state width="1887" height="290" key="GridCell.Tab.0.bottom" timestamp="1596709307231">
+    <state width="1887" height="290" key="GridCell.Tab.0.bottom" timestamp="1597153290514">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1596709307231" />
-    <state width="1887" height="290" key="GridCell.Tab.0.center" timestamp="1596709307230">
+    <state width="1887" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597153290514" />
+    <state width="1887" height="290" key="GridCell.Tab.0.center" timestamp="1597153290514">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1596709307230" />
-    <state width="1887" height="290" key="GridCell.Tab.0.left" timestamp="1596709307230">
+    <state width="1887" height="290" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597153290514" />
+    <state width="1887" height="290" key="GridCell.Tab.0.left" timestamp="1597153290514">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1596709307230" />
-    <state width="1887" height="290" key="GridCell.Tab.0.right" timestamp="1596709307231">
+    <state width="1887" height="290" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597153290514" />
+    <state width="1887" height="290" key="GridCell.Tab.0.right" timestamp="1597153290514">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="290" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1596709307231" />
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1596653819553">
+    <state width="1887" height="290" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597153290514" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1597056939503">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1596653819553" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597056939503" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1596627497034">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

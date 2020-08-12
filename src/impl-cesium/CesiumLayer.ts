@@ -16,8 +16,9 @@ import {Area} from "../api/primitives/Area";
 import {CesiumGeo} from "./CesiumGeo";
 import {Title} from "../api/primitives/Title";
 import {Model} from "../api/primitives/Model";
+import {GeoLayerBase} from "../api/core/GeoLayerBase";
 
-export class CesiumLayer extends GeoLayer {
+export class CesiumLayer extends GeoLayerBase {
 
     readonly dataSource: DataSource = new CustomDataSource();
     readonly billboardCollectionsData = new Map<GeoPrimitive, any[]>();
@@ -28,7 +29,7 @@ export class CesiumLayer extends GeoLayer {
         this.cesiumGeo = cesiumGeo;
     }
 
-    addPrimitive(geoPrimitive: GeoPrimitive): Link {
+     addPrimitive(geoPrimitive: GeoPrimitive): Link {
         if (geoPrimitive.type === GeoPrimitiveType.LINE)
             return this.cesiumLine(<Line>geoPrimitive)
 
@@ -45,7 +46,7 @@ export class CesiumLayer extends GeoLayer {
             return this.cesiumModel(<Model>geoPrimitive)
     }
 
-    removePrimitive(primitive: GeoPrimitive): void {
+     removePrimitive(primitive: GeoPrimitive): void {
 
     }
 

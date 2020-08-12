@@ -6,6 +6,8 @@ import {GeoPrimitive} from "../api/core/GeoPrimitive";
 import {CesiumLink} from "./CesiumLink";
 import {CesiumSetup} from "./CesiumSetup";
 import {MouseOverSupport} from "./MouseOverSupport";
+import {GeoEditor} from "../api/editor/GeoEditor";
+import {CesiumEditor} from "./editor/CesiumEditor";
 
 export class CesiumGeo extends CesiumSetup implements Geo {
 
@@ -54,6 +56,10 @@ export class CesiumGeo extends CesiumSetup implements Geo {
 
     createLayer(): GeoLayer {
         return new CesiumLayer(this);
+    }
+
+    createEditor(): GeoEditor {
+        return new CesiumEditor(this.cesium);
     }
 
 }

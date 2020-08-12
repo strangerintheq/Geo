@@ -13,6 +13,8 @@ let lat = 60;
 
 let geo: Geo = new CesiumGeo(document.querySelector('#cesium'), lon, lat, 10);
 
+geo.createEditor()
+
 let layer1 = geo.createLayer();
 geo.addLayer(layer1);
 let scatteringEllipse = new ScatteringEllipse(new Coordinate(lon, lat), 45, 10000, 20000);
@@ -36,7 +38,6 @@ layer3.addObject(tr2);
 let layer4 = geo.createLayer();
 
 let model = new Model(new Coordinate(lon-1, lat-1), "Cesium_Air.glb");
-model.course = 0;
 layer4.addPrimitive(model)
 geo.addLayer(layer4);
 

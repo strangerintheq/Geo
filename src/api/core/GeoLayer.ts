@@ -2,36 +2,16 @@ import {GeoObject} from "./GeoObject";
 import {GeoPrimitive} from "./GeoPrimitive";
 import {Link} from "./Link";
 
-export abstract class GeoLayer {
+export interface GeoLayer {
 
-    primitives: GeoPrimitive[] = [];
+    primitives: GeoPrimitive[];
     added: boolean;
 
-    addObject(geoObject: GeoObject): void {
-        geoObject.primitives.forEach(primitive => this.add(primitive));
-    }
+    addObject(geoObject: GeoObject): void;
+    removeObject(geoObject: GeoObject): void;
 
-    removeObject(geoObject: GeoObject): void{
-        geoObject.primitives.forEach(primitive => this.remove(primitive));
-    }
+    addPrimitive(geoPrimitive: GeoPrimitive): Link;
+    removePrimitive(primitive: GeoPrimitive): void;
 
-    abstract addPrimitive(geoPrimitive: GeoPrimitive): Link;
-
-    setVisible(isVisible: boolean): void {
-        this.primitives.forEach(p => p.setVisible(isVisible));
-    };
-
-    abstract removePrimitive(primitive: GeoPrimitive): void;
-
-    add(primitive: GeoPrimitive) {
-        let link: Link = this.addPrimitive(primitive);
-        primitive.setLink(link);
-        this.primitives.push(primitive);
-    }
-
-    remove(primitive: GeoPrimitive) {
-        let i = this.primitives.indexOf(primitive);
-        this.primitives.splice(i, 1);
-        this.removePrimitive(primitive);
-    }
+    setVisible(isVisible: boolean): void;
 }
