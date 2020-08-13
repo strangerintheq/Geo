@@ -1,8 +1,16 @@
 import {
     CallbackProperty,
-    Cartesian2, Cartesian3, Color,
+    Cartesian2,
+    Cartesian3,
+    Cartographic,
+    Color,
     CustomDataSource,
-    DataSource, Entity, HeightReference, PolylineGlowMaterialProperty, PolylineOutlineMaterialProperty,
+    DataSource,
+    EllipsoidGeodesic,
+    Entity,
+    HeightReference,
+    PolylineGlowMaterialProperty,
+    PolylineOutlineMaterialProperty,
     ScreenSpaceEventHandler,
     ScreenSpaceEventType,
     Viewer
@@ -28,6 +36,7 @@ export class CesiumEditor implements GeoEditor {
     private pickedLine: Entity;
     private readonly allPoints: Entity[] = [];
     private readonly allLines: Entity[] = [];
+    private readonly geodesic = new EllipsoidGeodesic();
 
 
     private insertPoint: Entity;
@@ -38,29 +47,11 @@ export class CesiumEditor implements GeoEditor {
 
     }
 
-    private createEditorLine() {
-        let linePointsMapper = () => this.allPoints.map(p => p.position['_value']);
-        this.editorLine = this.editorLayer.entities.add({
-            id: 'line_0',
-            polyline: {
-                clampToGround: true,
-                // depthFailMaterial: new Color(1,0,0),
-                positions: new CallbackProperty(linePointsMapper, false),
-                width: 5.0,
-                material: new PolylineOutlineMaterialProperty({
-                    color: Color.fromCssColorString('orange'),
-                    outlineColor: Color.fromCssColorString('#0000'),
-                    outlineWidth: 2
-                })
-            }
-        });
-    }
-
     private billboardParams(image: string){
         return {
             heightReference : HeightReference.CLAMP_TO_GROUND,
             image,
-            eyeOffset: new Cartesian3(0,0, -100000)
+            // eyeOffset: new Cartesian3(0,0, -100000)
         }
     }
 
@@ -71,14 +62,19 @@ export class CesiumEditor implements GeoEditor {
         });
     }
 
-    private addEditorPoint(position: Cartesian3): void {
+    private addEditorPoint(position: Cartesian3, insertIndex: number = null): void {
         let entity = this.editorLayer.entities.add({
             id: 'point_' + Math.random().toString(36).substring(2),
             position,
             billboard: this.billboardParams(SvgImages.dot())
         });
 
-        this.allPoints.push(entity);
+        if (insertIndex !== null){
+            this.allPoints.splice(insertIndex, 0, entity);
+        } else {
+            this.allPoints.push(entity);
+        }
+
 
         this.updateEditorLines();
 
@@ -132,13 +128,24 @@ export class CesiumEditor implements GeoEditor {
             this.insertPoint.show = false;
         } else {
             if (this.pickedLine) {
-                this.insertPoint.position = this.pickEllipsoid(screenPoint);
+                let p = Cartographic.fromCartesian(this.pickEllipsoid(screenPoint));
+                let idParts = this.pickedLine.id.split('_');
+                let p1 = this.extractPoint(idParts);
+                let p2 = this.extractPoint(idParts);
+                this.geodesic.setEndPoints(p1, p);
+                let d = this.geodesic.surfaceDistance;
+                this.geodesic.setEndPoints(p1, p2);
+                let p3 = Cartographic.toCartesian(this.geodesic.interpolateUsingSurfaceDistance(d));
+                this.assignPointPosition(this.insertPoint, p3);
                 this.insertPoint.show = true;
+            } else {
+                this.insertPoint.show = false;
             }
         }
+    }
 
-
-
+    private extractPoint(idParts: string[]){
+        return Cartographic.fromCartesian(this.allPoints[+idParts.pop()].position['_value']);
     }
 
     private pickEditorEntity(screenPoint: Cartesian2) {
@@ -147,9 +154,6 @@ export class CesiumEditor implements GeoEditor {
         this.pickedPoint = this.pickEditorPoint(pickedObject);
         this.pickedLine = this.pickEditorLine(pickedObject);
         this.updateMouseCursor();
-
-        // console.log('pickedPoint',this.pickedPoint)
-        // console.log('pickedLine',this.pickedLine)
     }
 
     private updateMouseCursor(){
@@ -170,8 +174,16 @@ export class CesiumEditor implements GeoEditor {
             return;
         if (Cartesian2.distance(screenPoint, lastLeftDownPos) > 2)
             return;
-        let globePoint = this.pickEllipsoid(screenPoint);
-        this.addEditorPoint(globePoint);
+        if (this.pickedLine) {
+            let pointIndex = +this.pickedLine.id.split('_').pop();
+            this.addEditorPoint(this.insertPoint.position['_value'], pointIndex);
+            this.insertPoint.show = false;
+            this.pickedLine = null;
+        } else {
+            let globePoint = this.pickEllipsoid(screenPoint);
+            this.addEditorPoint(globePoint);
+        }
+
         this.updateMouseCursor()
         this.canRotateGlobe(true);
     }
@@ -203,7 +215,11 @@ export class CesiumEditor implements GeoEditor {
     private translatePoint(screenPoint: Cartesian2) {
         let p = this.pickEllipsoid(screenPoint);
         if (!p) return;
-        this.pickedPoint.position = p;
+        this.assignPointPosition(this.pickedPoint, p);
+    }
+
+    private assignPointPosition(point:any, p:Cartesian3){
+        point.position = p; // ts compile time error crutch
     }
 
     private canRotateGlobe(canRotate: boolean){
@@ -226,12 +242,12 @@ export class CesiumEditor implements GeoEditor {
         this.updateEditorLines()
     }
 
-
     private addEditorLine(i0, i1) {
         let p0 = this.allPoints[i0];
         let p1 = this.allPoints[i1];
+        let arr = [];
         let line = this.editorLayer.entities.add({
-            id: `line_${Math.random().toString(36).substring(2)}`,
+            id: `line_${i0}_${i1}`,
             polyline: {
                 clampToGround: true,
                 width: 5.0,
@@ -241,7 +257,9 @@ export class CesiumEditor implements GeoEditor {
                     outlineWidth: 2
                 }),
                 positions: new CallbackProperty(() => {
-                    return [p0, p1].map(p => p.position['_value'])
+                    arr[0] = p0.position['_value'];
+                    arr[1] = p1.position['_value'];
+                    return arr;
                 }, false)
             }
         });

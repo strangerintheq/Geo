@@ -25,9 +25,12 @@ export class CesiumSetup {
 
     protected disableEntitySelection() {
         var handler = new ScreenSpaceEventHandler(this.cesium.scene.canvas);
-        handler.setInputAction((movement) => {
+        let resetSelectedEntity = (movement) => {
             this.cesium.selectedEntity = undefined;
-        }, ScreenSpaceEventType.LEFT_CLICK);
+            this.cesium.trackedEntity = undefined;
+        };
+        handler.setInputAction(resetSelectedEntity, ScreenSpaceEventType.LEFT_CLICK);
+        handler.setInputAction(resetSelectedEntity, ScreenSpaceEventType.LEFT_DOUBLE_CLICK)
     }
 
     protected setHomeLocation(lon:number, lat:number, size:number) {

@@ -16,11 +16,9 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="editor intermediate">
-      <change afterPath="$PROJECT_DIR$/src/impl-cesium/editor/SvgImages.ts" afterDir="false" />
+    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="insert points intermediate">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GeoApp.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/GeoApp.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/editor/GeoEditor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/editor/GeoEditor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/impl-cesium/CesiumSetup.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/CesiumSetup.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +49,7 @@
     <property name="JSInitializeFieldsIntentionBase.visibility" value="private" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/dist" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -114,7 +112,8 @@
       <workItem from="1597045747081" duration="1253000" />
       <workItem from="1597053141489" duration="7588000" />
       <workItem from="1597135494124" duration="8015000" />
-      <workItem from="1597219107420" duration="24115000" />
+      <workItem from="1597219107420" duration="24384000" />
+      <workItem from="1597300617949" duration="7891000" />
     </task>
     <task id="LOCAL-00001" summary="organize code">
       <created>1596653780099</created>
@@ -151,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597219186530</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="insert points intermediate">
+      <created>1597252241521</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1597252241521</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,7 +231,8 @@
     <MESSAGE value="tooltips" />
     <MESSAGE value="models implemented" />
     <MESSAGE value="editor intermediate" />
-    <option name="LAST_COMMIT_MESSAGE" value="editor intermediate" />
+    <MESSAGE value="insert points intermediate" />
+    <option name="LAST_COMMIT_MESSAGE" value="insert points intermediate" />
   </component>
   <component name="WindowStateProjectService">
     <state x="583" y="279" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597055657550">
@@ -244,30 +251,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="624" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1596212071096" />
-    <state x="634" y="154" key="FileChooserDialogImpl" timestamp="1596653619233">
+    <state x="634" y="154" key="FileChooserDialogImpl" timestamp="1597301618620">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="634" y="154" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1596653619233" />
-    <state width="1887" height="109" key="GridCell.Tab.0.bottom" timestamp="1597252029322">
+    <state x="634" y="154" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1597301618620" />
+    <state width="1887" height="109" key="GridCell.Tab.0.bottom" timestamp="1597316923733">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597252029322" />
-    <state width="1887" height="109" key="GridCell.Tab.0.center" timestamp="1597252029322">
+    <state width="1887" height="109" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597316923733" />
+    <state width="1887" height="109" key="GridCell.Tab.0.center" timestamp="1597316923733">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597252029322" />
-    <state width="1887" height="109" key="GridCell.Tab.0.left" timestamp="1597252029321">
+    <state width="1887" height="109" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597316923733" />
+    <state width="1887" height="109" key="GridCell.Tab.0.left" timestamp="1597316923733">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597252029321" />
-    <state width="1887" height="109" key="GridCell.Tab.0.right" timestamp="1597252029322">
+    <state width="1887" height="109" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597316923733" />
+    <state width="1887" height="109" key="GridCell.Tab.0.right" timestamp="1597316923733">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597252029322" />
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1597219188201">
+    <state width="1887" height="109" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597316923733" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1597252345040">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597219188201" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597252345040" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1596627497034">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -276,17 +283,17 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="688" y="394" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597232028360" />
-    <state x="544" y="114" width="832" height="812" key="find.popup" timestamp="1597229051564">
+    <state x="544" y="114" width="832" height="812" key="find.popup" timestamp="1597309548209">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="544" y="114" width="832" height="812" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597229051564" />
+    <state x="544" y="114" width="832" height="812" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597309548209" />
     <state x="727" y="214" key="refactoring.ChangeSignatureDialog" timestamp="1596709111504">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="214" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1596709111504" />
-    <state x="539" y="5" width="1009" height="1034" key="search.everywhere.popup" timestamp="1596561403040">
+    <state x="539" y="5" width="1009" height="1034" key="search.everywhere.popup" timestamp="1597301244509">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="539" y="5" width="1009" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1596561403040" />
+    <state x="539" y="5" width="1009" height="1034" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597301244509" />
   </component>
 </project>
