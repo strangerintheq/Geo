@@ -31,7 +31,7 @@ export class CesiumEditor implements GeoEditor {
     private mode: EditorMode = EditorMode.OFF;
     private editorLayer: DataSource = new CustomDataSource();
     private leftDownPosition: Cartesian2;
-
+    private tooltipEntity: Entity;
     private pickedPoint: Entity;
     private pickedLine: Entity;
     private readonly allPoints: Entity[] = [];
@@ -41,10 +41,11 @@ export class CesiumEditor implements GeoEditor {
 
     private insertPoint: Entity;
 
+
     constructor(cesiumViewer: Viewer) {
         this.cesiumViewer = cesiumViewer;
         this.createInsertPoint();
-
+        this.createTooltip();
     }
 
     private billboardParams(image: string){
@@ -79,6 +80,8 @@ export class CesiumEditor implements GeoEditor {
         this.updateEditorLines();
 
         this.pickedPoint = entity;
+
+        this.updateTooltipForPoint(this.pickedPoint)
     }
 
     private pickEllipsoid(screenPoint: Cartesian2): Cartesian3 {
@@ -94,6 +97,21 @@ export class CesiumEditor implements GeoEditor {
             let isPointPicked = pickedPoint?.id?.indexOf('point_') > -1;
             return isPointPicked ? pickedPoint : null;
         })?.id;
+    }
+
+    private updateTooltipForPoint(point) {
+        this.tooltipEntity.show = !!point;
+        if (point) {
+            let cartographic = Cartographic.fromCartesian(point.position['_value']);
+            let lat = this.formatDeg(cartographic.latitude);
+            let lon = this.formatDeg(cartographic.longitude);
+            this.tooltipEntity.label.text = `Широта  ${lat}\nДолгота ${lon}`;
+            this.tooltipEntity.position = point.position;
+        }
+    }
+
+    private formatDeg(n: number){
+        return (n/Math.PI*180).toFixed(2)
     }
 
     private pickEditorLine(pickedObjects: any[]) {
@@ -138,6 +156,7 @@ export class CesiumEditor implements GeoEditor {
                 let p3 = Cartographic.toCartesian(this.geodesic.interpolateUsingSurfaceDistance(d));
                 this.assignPointPosition(this.insertPoint, p3);
                 this.insertPoint.show = true;
+                this.updateTooltipForPoint(this.insertPoint);
             } else {
                 this.insertPoint.show = false;
             }
@@ -152,13 +171,15 @@ export class CesiumEditor implements GeoEditor {
         let pickedObject = this.cesiumViewer.scene.drillPick(screenPoint);
         // console.log(pickedObject)
         this.pickedPoint = this.pickEditorPoint(pickedObject);
+        this.updateTooltipForPoint(this.pickedPoint)
         this.pickedLine = this.pickEditorLine(pickedObject);
         this.updateMouseCursor();
     }
 
     private updateMouseCursor(){
         let overPrimitive = this.pickedPoint || this.pickedLine;
-        this.cesiumViewer.canvas.style.cursor = overPrimitive ? 'pointer' : 'default'
+        this.cesiumViewer.canvas.style.cursor = overPrimitive ? 'pointer' : 'default';
+
     }
 
     private leftDown(screenPoint: Cartesian2) {
@@ -216,6 +237,7 @@ export class CesiumEditor implements GeoEditor {
         let p = this.pickEllipsoid(screenPoint);
         if (!p) return;
         this.assignPointPosition(this.pickedPoint, p);
+        this.updateTooltipForPoint(this.pickedPoint);
     }
 
     private assignPointPosition(point:any, p:Cartesian3){
@@ -275,5 +297,18 @@ export class CesiumEditor implements GeoEditor {
         for (let i=0; i<total; i++) {
             this.addEditorLine(i, i+1);
         }
+    }
+
+    private createTooltip() {
+        this.tooltipEntity = this.editorLayer.entities.add({
+            show: false,
+            label: {
+                disableDepthTestDistance: 1e100,
+                showBackground: true,
+                pixelOffset: new Cartesian2(0,40),
+                font: '16px monospace',
+                // eyeOffset: new Cartesian3(0,0,-10000)
+            }
+        })
     }
 }
