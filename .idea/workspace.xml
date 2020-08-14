@@ -16,7 +16,8 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="insert points">
+    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="tooltip for point">
+      <change afterPath="$PROJECT_DIR$/src/impl-cesium/editor/GeodesicCalc.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" afterDir="false" />
     </list>
@@ -112,7 +113,8 @@
       <workItem from="1597053141489" duration="7588000" />
       <workItem from="1597135494124" duration="8015000" />
       <workItem from="1597219107420" duration="24384000" />
-      <workItem from="1597300617949" duration="12450000" />
+      <workItem from="1597300617949" duration="13581000" />
+      <workItem from="1597388959760" duration="3933000" />
     </task>
     <task id="LOCAL-00001" summary="organize code">
       <created>1596653780099</created>
@@ -163,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597317269878</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="tooltip for point">
+      <created>1597322297156</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1597322297156</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +248,8 @@
     <MESSAGE value="editor intermediate" />
     <MESSAGE value="insert points intermediate" />
     <MESSAGE value="insert points" />
-    <option name="LAST_COMMIT_MESSAGE" value="insert points" />
+    <MESSAGE value="tooltip for point" />
+    <option name="LAST_COMMIT_MESSAGE" value="tooltip for point" />
   </component>
   <component name="WindowStateProjectService">
     <state x="583" y="279" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597055657550">
@@ -262,26 +272,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="634" y="154" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1597301618620" />
-    <state width="1887" height="109" key="GridCell.Tab.0.bottom" timestamp="1597321787177">
+    <state width="1887" height="158" key="GridCell.Tab.0.bottom" timestamp="1597391329472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597321787177" />
-    <state width="1887" height="109" key="GridCell.Tab.0.center" timestamp="1597321787177">
+    <state width="1887" height="158" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597391329472" />
+    <state width="1887" height="158" key="GridCell.Tab.0.center" timestamp="1597391329471">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597321787177" />
-    <state width="1887" height="109" key="GridCell.Tab.0.left" timestamp="1597321787176">
+    <state width="1887" height="158" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597391329471" />
+    <state width="1887" height="158" key="GridCell.Tab.0.left" timestamp="1597391329471">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597321787176" />
-    <state width="1887" height="109" key="GridCell.Tab.0.right" timestamp="1597321787177">
+    <state width="1887" height="158" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597391329471" />
+    <state width="1887" height="158" key="GridCell.Tab.0.right" timestamp="1597391329471">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1887" height="109" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597321787177" />
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1597317272811">
+    <state width="1887" height="158" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597391329471" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1597322299926">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597317272811" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597322299926" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1596627497034">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -290,10 +300,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="688" y="394" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597232028360" />
-    <state x="544" y="114" width="832" height="812" key="find.popup" timestamp="1597309548209">
+    <state x="544" y="114" width="832" height="812" key="find.popup" timestamp="1597390156575">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="544" y="114" width="832" height="812" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597309548209" />
+    <state x="544" y="114" width="832" height="812" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597390156575" />
     <state x="727" y="214" key="refactoring.ChangeSignatureDialog" timestamp="1596709111504">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

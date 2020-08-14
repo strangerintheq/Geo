@@ -9,7 +9,6 @@ import {
     EllipsoidGeodesic,
     Entity,
     HeightReference,
-    PolylineGlowMaterialProperty,
     PolylineOutlineMaterialProperty,
     ScreenSpaceEventHandler,
     ScreenSpaceEventType,
@@ -30,23 +29,137 @@ export class CesiumEditor implements GeoEditor {
 
     private mode: EditorMode = EditorMode.OFF;
     private editorLayer: DataSource = new CustomDataSource();
-    private leftDownPosition: Cartesian2;
+
+    private insertPoint: Entity;
     private tooltipEntity: Entity;
     private pickedPoint: Entity;
     private pickedLine: Entity;
+
     private readonly allPoints: Entity[] = [];
     private readonly allLines: Entity[] = [];
+
+    private leftDownPosition: Cartesian2;
+    private rightDownPosition: Cartesian2;
+
     private readonly geodesic = new EllipsoidGeodesic();
-
-
-    private insertPoint: Entity;
-
 
     constructor(cesiumViewer: Viewer) {
         this.cesiumViewer = cesiumViewer;
         this.createInsertPoint();
         this.createTooltip();
     }
+
+    setMode(mode: EditorMode): void {
+        this.mode = mode;
+        if (mode === EditorMode.OFF) {
+            this.detach();
+        } else {
+            this.attach()
+        }
+    }
+
+    private detach() {
+        this.cesiumViewer.dataSources.remove(this.editorLayer);
+        this.inputHandler.destroy();
+        this.inputHandler = null;
+    }
+
+    private attach() {
+
+        this.cesiumViewer.dataSources.add(this.editorLayer);
+        this.inputHandler = new ScreenSpaceEventHandler(this.cesiumViewer.scene.canvas);
+
+        this.inputHandler.setInputAction(
+            m => this.mouseMove(m.endPosition), ScreenSpaceEventType.MOUSE_MOVE);
+
+        this.inputHandler.setInputAction(
+            m => this.leftDown(m.position), ScreenSpaceEventType.LEFT_DOWN);
+
+        this.inputHandler.setInputAction(
+            m => this.leftUp(m.position), ScreenSpaceEventType.LEFT_UP);
+
+        this.inputHandler.setInputAction(
+            m => this.leftDoubleClick(m.position), ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
+        this.inputHandler.setInputAction(
+            m => this.rightDown(m.position), ScreenSpaceEventType.RIGHT_DOWN);
+
+        this.inputHandler.setInputAction(
+            m => this.rightUp(m.position), ScreenSpaceEventType.RIGHT_UP);
+    }
+
+    private mouseMove(screenPoint: Cartesian2) {
+
+        if (this.pickedPoint && this.rightDownPosition)
+            return this.updateAltitude(screenPoint);
+
+        if (this.pickedPoint && this.leftDownPosition)
+            return this.translatePoint(screenPoint);
+
+
+        this.pickEditorEntity(screenPoint);
+
+        if (this.pickedPoint) {
+            this.insertPoint.show = false;
+            return
+        }
+
+        if (this.pickedLine) {
+            this.manageInsertPoint(screenPoint);
+        } else {
+            this.insertPoint.show = false;
+        }
+
+    }
+
+    private leftDoubleClick(screenPoint: Cartesian2) {
+        if (!this.pickedPoint)
+            return;
+
+        this.removePoint(this.pickedPoint);
+        this.pickEditorEntity(screenPoint);
+    }
+
+    private leftDown(screenPoint: Cartesian2) {
+        this.leftDownPosition = screenPoint;
+        // console.log('leftDown', screenPoint);
+        this.canRotateGlobe(!this.pickedPoint);
+    }
+
+    private rightDown(screenPoint: Cartesian2) {
+        this.rightDownPosition = screenPoint;
+        // console.log('leftDown', screenPoint);
+        this.canPanGlobe(!this.pickedPoint);
+    }
+
+    private rightUp(screenPoint: Cartesian2) {
+        this.rightDownPosition = null;
+    }
+
+    private leftUp(screenPoint: Cartesian2) {
+        let lastLeftDownPos = this.leftDownPosition
+        this.leftDownPosition = null;
+        if (this.pickedPoint)
+            return;
+        if (Cartesian2.distance(screenPoint, lastLeftDownPos) > 2)
+            return;
+        if (this.pickedLine) {
+            let pointIndex = +this.pickedLine.id.split('_').pop();
+            this.addEditorPoint(this.insertPoint.position['_value'], pointIndex);
+            this.insertPoint.show = false;
+            this.pickedLine = null;
+        } else {
+            let globePoint = this.pickEllipsoid(screenPoint);
+            this.addEditorPoint(globePoint);
+        }
+
+        this.updateMouseCursor()
+        this.canRotateGlobe(true);
+    }
+
+    ///
+    ///
+    ///
 
     private billboardParams(image: string){
         return {
@@ -105,6 +218,7 @@ export class CesiumEditor implements GeoEditor {
             let cartographic = Cartographic.fromCartesian(point.position['_value']);
             let lat = this.formatDeg(cartographic.latitude);
             let lon = this.formatDeg(cartographic.longitude);
+            // @ts-ignore
             this.tooltipEntity.label.text = `Широта  ${lat}\nДолгота ${lon}`;
             this.tooltipEntity.position = point.position;
         }
@@ -123,44 +237,18 @@ export class CesiumEditor implements GeoEditor {
 
     }
 
-    setMode(mode: EditorMode): void {
-        this.mode = mode;
-        if (mode === EditorMode.OFF) {
-            this.detach();
-        } else {
-            this.attach()
-        }
-    }
-
-    private mouseMove(screenPoint: Cartesian2) {
-
-        if (this.pickedPoint && this.leftDownPosition) {
-            this.translatePoint(screenPoint);
-
-            return
-        }
-
-        this.pickEditorEntity(screenPoint);
-
-        if (this.pickedPoint) {
-            this.insertPoint.show = false;
-        } else {
-            if (this.pickedLine) {
-                let p = Cartographic.fromCartesian(this.pickEllipsoid(screenPoint));
-                let idParts = this.pickedLine.id.split('_');
-                let p1 = this.extractPoint(idParts);
-                let p2 = this.extractPoint(idParts);
-                this.geodesic.setEndPoints(p1, p);
-                let d = this.geodesic.surfaceDistance;
-                this.geodesic.setEndPoints(p1, p2);
-                let p3 = Cartographic.toCartesian(this.geodesic.interpolateUsingSurfaceDistance(d));
-                this.assignPointPosition(this.insertPoint, p3);
-                this.insertPoint.show = true;
-                this.updateTooltipForPoint(this.insertPoint);
-            } else {
-                this.insertPoint.show = false;
-            }
-        }
+    private manageInsertPoint(screenPoint: Cartesian2) {
+        let p = Cartographic.fromCartesian(this.pickEllipsoid(screenPoint));
+        let idParts = this.pickedLine.id.split('_');
+        let p1 = this.extractPoint(idParts);
+        let p2 = this.extractPoint(idParts);
+        this.geodesic.setEndPoints(p1, p);
+        let d = this.geodesic.surfaceDistance;
+        this.geodesic.setEndPoints(p1, p2);
+        let p3 = Cartographic.toCartesian(this.geodesic.interpolateUsingSurfaceDistance(d));
+        this.assignPointPosition(this.insertPoint, p3);
+        this.insertPoint.show = true;
+        this.updateTooltipForPoint(this.insertPoint);
     }
 
     private extractPoint(idParts: string[]){
@@ -182,57 +270,6 @@ export class CesiumEditor implements GeoEditor {
 
     }
 
-    private leftDown(screenPoint: Cartesian2) {
-        this.leftDownPosition = screenPoint;
-        // console.log('leftDown', screenPoint);
-        this.canRotateGlobe(!this.pickedPoint);
-    }
-
-    private leftUp(screenPoint: Cartesian2) {
-        let lastLeftDownPos = this.leftDownPosition
-        this.leftDownPosition = null;
-        if (this.pickedPoint)
-            return;
-        if (Cartesian2.distance(screenPoint, lastLeftDownPos) > 2)
-            return;
-        if (this.pickedLine) {
-            let pointIndex = +this.pickedLine.id.split('_').pop();
-            this.addEditorPoint(this.insertPoint.position['_value'], pointIndex);
-            this.insertPoint.show = false;
-            this.pickedLine = null;
-        } else {
-            let globePoint = this.pickEllipsoid(screenPoint);
-            this.addEditorPoint(globePoint);
-        }
-
-        this.updateMouseCursor()
-        this.canRotateGlobe(true);
-    }
-
-    private detach() {
-        this.cesiumViewer.dataSources.remove(this.editorLayer);
-        this.inputHandler.destroy();
-        this.inputHandler = null;
-    }
-
-    private attach() {
-
-        this.cesiumViewer.dataSources.add(this.editorLayer);
-        this.inputHandler = new ScreenSpaceEventHandler(this.cesiumViewer.scene.canvas);
-
-        this.inputHandler.setInputAction(
-            m => this.mouseMove(m.endPosition), ScreenSpaceEventType.MOUSE_MOVE);
-
-        this.inputHandler.setInputAction(
-            m => this.leftDown(m.position), ScreenSpaceEventType.LEFT_DOWN);
-
-        this.inputHandler.setInputAction(
-            m => this.leftUp(m.position), ScreenSpaceEventType.LEFT_UP);
-
-        this.inputHandler.setInputAction(
-            m => this.leftDoubleClick(m.position), ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
-    }
-
     private translatePoint(screenPoint: Cartesian2) {
         let p = this.pickEllipsoid(screenPoint);
         if (!p) return;
@@ -246,15 +283,10 @@ export class CesiumEditor implements GeoEditor {
 
     private canRotateGlobe(canRotate: boolean){
         this.cesiumViewer.scene.screenSpaceCameraController.enableRotate = canRotate;
-        // this.cesiumViewer.scene.screenSpaceCameraController.enableInputs = canRotate;
     }
 
-    private leftDoubleClick(screenPoint: Cartesian2) {
-        if (!this.pickedPoint)
-            return;
-
-        this.removePoint(this.pickedPoint);
-        this.pickEditorEntity(screenPoint);
+    private canPanGlobe(canRotate: boolean){
+        this.cesiumViewer.scene.screenSpaceCameraController.enableTilt  = canRotate;
     }
 
     private removePoint(point: Entity) {
@@ -310,5 +342,45 @@ export class CesiumEditor implements GeoEditor {
                 // eyeOffset: new Cartesian3(0,0,-10000)
             }
         })
+    }
+
+    private updateAltitude(screenPoint: Cartesian2) {
+        let camera = this.cesiumViewer.camera;
+        let scene = this.cesiumViewer.scene;
+
+        let cameraDirection = camera.direction;
+        let cameraPosition = camera.position;
+        let movingPointPosition = this.pickedPoint.position['_value'];
+        // let
+
+        // vector from camera to a primitive
+        let toCenter = Cartesian3.subtract(movingPointPosition,
+            cameraPosition,
+            new Cartesian3()
+        );
+
+        // project vector onto camera cameraDirection vector
+        let toCenterProj = Cartesian3.multiplyByScalar(
+            cameraDirection,
+            Cartesian3.dot(cameraDirection, toCenter),
+            new Cartesian3()
+        );
+
+        let distance = Cartesian3.magnitude(toCenterProj);
+
+        let pixelSize = this.cesiumViewer.camera.frustum.getPixelDimensions(
+            scene.drawingBufferWidth,
+            scene.drawingBufferHeight,
+            distance,
+            devicePixelRatio,
+            new Cartesian2()
+        );
+
+        console.log(pixelSize)
+
+        let p = movingPointPosition;
+        let cartographic = Cartographic.fromCartesian(p);
+        //cartographic.height
+        return undefined;
     }
 }
