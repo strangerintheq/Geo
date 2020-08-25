@@ -1,5 +1,5 @@
 import {
-    CallbackProperty,
+    CallbackProperty, Camera,
     Cartesian2,
     Cartesian3,
     Cartographic,
@@ -9,7 +9,7 @@ import {
     EllipsoidGeodesic,
     Entity,
     HeightReference,
-    PolylineOutlineMaterialProperty,
+    PolylineOutlineMaterialProperty, Scene,
     ScreenSpaceEventHandler,
     ScreenSpaceEventType,
     Viewer
@@ -36,7 +36,10 @@ export class CesiumEditor implements GeoEditor {
     private pickedLine: Entity;
 
     private readonly allPoints: Entity[] = [];
-    private readonly allLines: Entity[] = [];
+    private readonly linkLines: Entity[] = [];
+
+    private readonly heightLines: Entity[] = [];
+    private readonly groundPoints: Entity[] = [];
 
     private leftDownPosition: Cartesian2;
     private rightDownPosition: Cartesian2;
@@ -163,7 +166,7 @@ export class CesiumEditor implements GeoEditor {
 
     private billboardParams(image: string){
         return {
-            heightReference : HeightReference.CLAMP_TO_GROUND,
+            // heightReference : HeightReference.CLAMP_TO_GROUND,
             image,
             // eyeOffset: new Cartesian3(0,0, -100000)
         }
@@ -177,22 +180,50 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private addEditorPoint(position: Cartesian3, insertIndex: number = null): void {
-        let entity = this.editorLayer.entities.add({
-            id: 'point_' + Math.random().toString(36).substring(2),
+
+        let id = Math.random().toString(36).substring(2);
+
+        let anchorPoint = this.editorLayer.entities.add({
+            id: 'point_' + id,
             position,
             billboard: this.billboardParams(SvgImages.dot())
         });
 
+        let groundPoint = this.editorLayer.entities.add({
+            id: 'ground_point_' + id,
+            position,
+            billboard: this.billboardParams(SvgImages.dot3())
+        });
+
+        let arr = [];
+
+        let heightLine =  this.editorLayer.entities.add({
+            id: 'height_line_' + id,
+            polyline: {
+                width: 2.0,
+                material: new Color(0,1,0),
+                positions: new CallbackProperty(() => {
+                    arr[0] = groundPoint.position['_value'];
+                    arr[1] = anchorPoint.position['_value'];
+                    return arr;
+                }, false)
+            }
+        });
+
         if (insertIndex !== null){
-            this.allPoints.splice(insertIndex, 0, entity);
+            this.allPoints.splice(insertIndex, 0, anchorPoint);
+            this.groundPoints.splice(insertIndex, 0, groundPoint);
+            this.heightLines.splice(insertIndex, 0, heightLine);
         } else {
-            this.allPoints.push(entity);
+            this.allPoints.push(anchorPoint);
+            this.groundPoints.push(groundPoint);
+            this.heightLines.push(heightLine);
         }
 
 
         this.updateEditorLines();
 
-        this.pickedPoint = entity;
+        this.pickedPoint = anchorPoint;
 
         this.updateTooltipForPoint(this.pickedPoint)
     }
@@ -219,7 +250,7 @@ export class CesiumEditor implements GeoEditor {
             let lat = this.formatDeg(cartographic.latitude);
             let lon = this.formatDeg(cartographic.longitude);
             // @ts-ignore
-            this.tooltipEntity.label.text = `Широта  ${lat}\nДолгота ${lon}`;
+            this.tooltipEntity.label.text = `Широта  ${lat}\nДолгота ${lon}\nВысота ${cartographic.height.toFixed(0)}`;
             this.tooltipEntity.position = point.position;
         }
     }
@@ -271,6 +302,12 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private translatePoint(screenPoint: Cartesian2) {
+
+
+        let height = Cartographic.fromCartesian(this.pickedPoint.position['_value']).height;
+        if (Math.abs(height)>1)
+            return
+
         let p = this.pickEllipsoid(screenPoint);
         if (!p) return;
         this.assignPointPosition(this.pickedPoint, p);
@@ -303,7 +340,7 @@ export class CesiumEditor implements GeoEditor {
         let line = this.editorLayer.entities.add({
             id: `line_${i0}_${i1}`,
             polyline: {
-                clampToGround: true,
+                // clampToGround: true,
                 width: 5.0,
                 material: new PolylineOutlineMaterialProperty({
                     color: Color.fromCssColorString('orange'),
@@ -317,13 +354,13 @@ export class CesiumEditor implements GeoEditor {
                 }, false)
             }
         });
-        this.allLines.push(line);
+        this.linkLines.push(line);
         return line;
     }
 
     private updateEditorLines() {
-        this.allLines.forEach(l => this.editorLayer.entities.remove(l));
-        this.allLines.splice(0, this.allLines.length);
+        this.linkLines.forEach(l => this.editorLayer.entities.remove(l));
+        this.linkLines.splice(0, this.linkLines.length);
 
         let total = this.allPoints.length-1;
         for (let i=0; i<total; i++) {
@@ -345,14 +382,36 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private updateAltitude(screenPoint: Cartesian2) {
+
+        if (this.pickedPoint.id.indexOf('ground')>-1)
+            return
+
+        let movingPointPosition = this.pickedPoint.position['_value'];
+        let cartographic = Cartographic.fromCartesian(movingPointPosition);
+        cartographic.height = 0;
+        let projectedOnSurface = Cartographic.toCartesian(cartographic);
+        let pickedEllipsoidPosition = this.pickEllipsoid(screenPoint);
+        let dist = Cartesian3.distance(projectedOnSurface, pickedEllipsoidPosition);
+        let angle1 = Cartesian3.angleBetween(projectedOnSurface, this.cesiumViewer.camera.position);
+        let angle2 = Cartesian3.angleBetween(pickedEllipsoidPosition, this.cesiumViewer.camera.position);
+
+        // console.log(dist, angle1-angle2);
+        cartographic.height = dist*Math.tan(angle2-angle1);
+        console.log(cartographic.height)
+
+        let p = Cartographic.toCartesian(cartographic);
+        // console.log(p)
+        this.assignPointPosition(this.pickedPoint, p);
+        this.updateTooltipForPoint(this.pickedPoint);
+
+        return undefined;
+    }
+
+    private pixelSize(movingPointPosition) {
         let camera = this.cesiumViewer.camera;
         let scene = this.cesiumViewer.scene;
-
         let cameraDirection = camera.direction;
         let cameraPosition = camera.position;
-        let movingPointPosition = this.pickedPoint.position['_value'];
-        // let
-
         // vector from camera to a primitive
         let toCenter = Cartesian3.subtract(movingPointPosition,
             cameraPosition,
@@ -375,12 +434,8 @@ export class CesiumEditor implements GeoEditor {
             devicePixelRatio,
             new Cartesian2()
         );
-
         console.log(pixelSize)
 
-        let p = movingPointPosition;
-        let cartographic = Cartographic.fromCartesian(p);
-        //cartographic.height
-        return undefined;
+        return pixelSize;
     }
 }

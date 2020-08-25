@@ -10,4 +10,7 @@ export default {
     dot2: () => svg(20,20,
         circle(5, 'orange') + circle(2, 'steelblue')
     ),
+    dot3: () => svg(20,20,
+        circle(5, 'red') + circle(2, 'steelblue')
+    ),
 }
