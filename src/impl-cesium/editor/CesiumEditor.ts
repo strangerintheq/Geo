@@ -271,6 +271,8 @@ export class CesiumEditor implements GeoEditor {
     private manageInsertPoint(screenPoint: Cartesian2) {
         let p = Cartographic.fromCartesian(this.pickEllipsoid(screenPoint));
         let idParts = this.pickedLine.id.split('_');
+        if (idParts[0] === 'height')
+            return
         let p1 = this.extractPoint(idParts);
         let p2 = this.extractPoint(idParts);
         this.geodesic.setEndPoints(p1, p);
@@ -304,7 +306,7 @@ export class CesiumEditor implements GeoEditor {
     private translatePoint(screenPoint: Cartesian2) {
 
 
-        let height = Cartographic.fromCartesian(this.pickedPoint.position['_value']).height;
+        let height = this.getHeightAboveSurface(this.pickedPoint);
         if (Math.abs(height)>1)
             return
 
@@ -312,6 +314,23 @@ export class CesiumEditor implements GeoEditor {
         if (!p) return;
         this.assignPointPosition(this.pickedPoint, p);
         this.updateTooltipForPoint(this.pickedPoint);
+
+
+        if (this.pickedPoint.id.indexOf('ground') > -1) {
+            let index = this.groundPoints.indexOf(this.pickedPoint);
+            let cartographic = Cartographic.fromCartesian(p);
+            let linkedPoint = this.allPoints[index];
+            cartographic.height = this.getHeightAboveSurface(linkedPoint);
+            this.assignPointPosition(linkedPoint, Cartographic.toCartesian(cartographic));
+        } else {
+            let index = this.allPoints.indexOf(this.pickedPoint);
+            let linkedPoint = this.groundPoints[index];
+            this.assignPointPosition(linkedPoint, p);
+        }
+    }
+
+    private getHeightAboveSurface(point:Entity):number {
+        return Cartographic.fromCartesian(point.position['_value']).height
     }
 
     private assignPointPosition(point:any, p:Cartesian3){
@@ -327,9 +346,18 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private removePoint(point: Entity) {
+
         let index = this.allPoints.indexOf(point);
-        this.allPoints.splice(index, 1);
         this.editorLayer.entities.remove(point);
+        this.allPoints.splice(index, 1);
+
+
+        this.editorLayer.entities.remove(this.groundPoints[index])
+        this.groundPoints.splice(index, 1);
+
+        this.editorLayer.entities.remove(this.heightLines[index])
+        this.heightLines.splice(index, 1);
+
         this.updateEditorLines()
     }
 
