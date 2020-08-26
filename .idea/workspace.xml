@@ -19,7 +19,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="point altitude intermediate">
+    <list default="true" id="afd97b6b-417b-4af2-9b2e-4cebaba40a9f" name="Default Changelist" comment="editor points altitude">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/impl-cesium/editor/CesiumEditor.ts" afterDir="false" />
     </list>
@@ -118,7 +118,7 @@
       <workItem from="1597300617949" duration="13581000" />
       <workItem from="1597388959760" duration="4589000" />
       <workItem from="1598343579506" duration="13456000" />
-      <workItem from="1598423997510" duration="2611000" />
+      <workItem from="1598423997510" duration="5220000" />
     </task>
     <task id="LOCAL-00001" summary="organize code">
       <created>1596653780099</created>
@@ -190,7 +190,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598385083358</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="editor points altitude">
+      <created>1598427815246</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1598427815246</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,7 +276,8 @@
     <MESSAGE value="tooltip for point" />
     <MESSAGE value="move point in space intermediate" />
     <MESSAGE value="point altitude intermediate" />
-    <option name="LAST_COMMIT_MESSAGE" value="point altitude intermediate" />
+    <MESSAGE value="editor points altitude" />
+    <option name="LAST_COMMIT_MESSAGE" value="editor points altitude" />
   </component>
   <component name="WindowStateProjectService">
     <state x="583" y="279" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597055657550">
@@ -296,22 +304,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="781" y="368" key="Github.ShareDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1597397059271" />
-    <state width="1893" height="170" key="GridCell.Tab.0.bottom" timestamp="1598427113312">
+    <state width="1893" height="170" key="GridCell.Tab.0.bottom" timestamp="1598438943709">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1893" height="170" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1598427113312" />
-    <state width="1893" height="170" key="GridCell.Tab.0.center" timestamp="1598427113312">
+    <state width="1893" height="170" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1598438943709" />
+    <state width="1893" height="170" key="GridCell.Tab.0.center" timestamp="1598438943709">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1893" height="170" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1598427113312" />
-    <state width="1893" height="170" key="GridCell.Tab.0.left" timestamp="1598427113312">
+    <state width="1893" height="170" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1598438943709" />
+    <state width="1893" height="170" key="GridCell.Tab.0.left" timestamp="1598438943709">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1893" height="170" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1598427113312" />
-    <state width="1893" height="170" key="GridCell.Tab.0.right" timestamp="1598427113312">
+    <state width="1893" height="170" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1598438943709" />
+    <state width="1893" height="170" key="GridCell.Tab.0.right" timestamp="1598438943709">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1893" height="170" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598427113312" />
+    <state width="1893" height="170" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598438943709" />
     <state width="1893" height="330" key="GridCell.Tab.1.bottom" timestamp="1598385093530">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -360,10 +368,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1893" height="330" key="GridCell.Tab.3.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598385093530" />
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1598385084458">
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2" timestamp="1598428009442">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1598385084458" />
+    <state x="352" y="102" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1598428009442" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1596627497034">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

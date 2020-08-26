@@ -45,6 +45,7 @@ export class CesiumEditor implements GeoEditor {
     private rightDownPosition: Cartesian2;
 
     private readonly geodesic = new EllipsoidGeodesic();
+    private dragStartAltitude: number;
 
     constructor(cesiumViewer: Viewer) {
         this.cesiumViewer = cesiumViewer;
@@ -131,12 +132,14 @@ export class CesiumEditor implements GeoEditor {
 
     private rightDown(screenPoint: Cartesian2) {
         this.rightDownPosition = screenPoint;
-        // console.log('leftDown', screenPoint);
+        if (this.pickedPoint)
+            this.dragStartAltitude = this.getHeightAboveSurface(this.pickedPoint);
         this.canPanGlobe(!this.pickedPoint);
     }
 
     private rightUp(screenPoint: Cartesian2) {
         this.rightDownPosition = null;
+        this.dragStartAltitude = null;
     }
 
     private leftUp(screenPoint: Cartesian2) {
@@ -415,21 +418,26 @@ export class CesiumEditor implements GeoEditor {
             return
 
         let movingPointPosition = this.pickedPoint.position['_value'];
+
         let cartographic = Cartographic.fromCartesian(movingPointPosition);
-        cartographic.height = 0;
-        let projectedOnSurface = Cartographic.toCartesian(cartographic);
-        let pickedEllipsoidPosition = this.pickEllipsoid(screenPoint);
-        let dist = Cartesian3.distance(projectedOnSurface, pickedEllipsoidPosition);
-        let angle1 = Cartesian3.angleBetween(projectedOnSurface, this.cesiumViewer.camera.position);
-        let angle2 = Cartesian3.angleBetween(pickedEllipsoidPosition, this.cesiumViewer.camera.position);
+        // cartographic.height = 0;
+        // let projectedOnSurface = Cartographic.toCartesian(cartographic);
+        // let pickedEllipsoidPosition = this.pickEllipsoid(screenPoint);
+        // let dist = Cartesian3.distance(projectedOnSurface, pickedEllipsoidPosition);
+        // let angle1 = Cartesian3.angleBetween(projectedOnSurface, this.cesiumViewer.camera.position);
+        // let angle2 = Cartesian3.angleBetween(pickedEllipsoidPosition, this.cesiumViewer.camera.position);
 
         // console.log(dist, angle1-angle2);
-        cartographic.height = dist*Math.tan(angle2-angle1);
-        console.log(cartographic.height)
-
-        let p = Cartographic.toCartesian(cartographic);
+        // cartographic.height = dist*Math.tan(angle2-angle1);
+        // console.log(cartographic.height)
+        //
+        // let p = Cartographic.toCartesian(cartographic);
         // console.log(p)
-        this.assignPointPosition(this.pickedPoint, p);
+
+        let dy = this.rightDownPosition.y - screenPoint.y;
+        let px = this.pixelSize(movingPointPosition);
+        cartographic.height = Math.max(0, this.dragStartAltitude + dy*px.y);
+        this.assignPointPosition(this.pickedPoint, Cartographic.toCartesian(cartographic));
         this.updateTooltipForPoint(this.pickedPoint);
 
         return undefined;
