@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Geo.iml" filepath="$PROJECT_DIR$/.idea/Geo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../three-selection/.idea/three-selection.iml" filepath="$PROJECT_DIR$/../three-selection/.idea/three-selection.iml" />
     </modules>
   </component>
 </project>
