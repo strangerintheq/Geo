@@ -6,15 +6,62 @@ import {Coordinate} from "./api/core/Coordinate";
 import SVG from "./api/core/InlineSVG";
 import {Model} from "./api/primitives/Model";
 import {EditorMode} from "./api/editor/EditorMode";
+import InlineSVG from "./api/core/InlineSVG";
+import {GeoEditor} from "./api/editor/GeoEditor";
+import bezierSpline from "@turf/bezier-spline";
+import turfAlong from "@turf/along";
+import lineString from "turf-linestring";
+import {Line} from "./api/primitives/Line";
 
 window['CESIUM_BASE_URL'] = 'http://localhost:63342/Geo/dist/Cesium';
 
-let lon = 30;
-let lat = 60;
+const lon = 30;
+const lat = 60;
 
-let geo: Geo = new CesiumGeo(document.querySelector('#cesium'), lon, lat, 10);
+const domElement: HTMLElement = document.querySelector('#cesium');
+const geo: Geo = new CesiumGeo(domElement, lon, lat, 10);
+let layer = geo.createLayer();
+geo.addLayer(layer);
+const geoEditor: GeoEditor = geo.createEditor();
+geoEditor.setMode(EditorMode.LINE_3D);
 
-geo.createEditor().setMode(EditorMode.LINE)
+function bezier1d(p0, p1, p2, t) {
+    return Math.pow(1 - t,2)*p0 + 2*t*(1 - t)*p1 + t*t*p2;
+}
+
+function along(from, to, dist) {
+    const line = lineString([from, to]);
+    const options = {units: 'kilometers'};
+    const along = turfAlong(line, dist/1000, options).geometry.coordinates;
+    return new Coordinate(...along, from[2])
+}
+
+function calcRoundCorner(p0: Coordinate, p1: Coordinate, p2: Coordinate, size) {
+    p0 = along(p1, p0, size);
+    p2 = along(p1, p2, size);
+    const roundCorner = [];
+    for (let i = 0; i <= 1; i += 0.1) {
+        roundCorner.push(new Coordinate(
+            bezier1d(p0[0], p1[0], p2[0], i),
+            bezier1d(p0[1], p1[1], p2[1], i),
+            bezier1d(p0[2], p1[2], p2[2], i),
+        ))
+    }
+    return roundCorner;
+}
+
+geo.addButton(InlineSVG.smallCross('red'), () => {
+    let c = geoEditor.getData();
+    let result = [c[0]];
+    for (let i = 1; i < c.length - 1; i++) {
+        result.push(...calcRoundCorner(c[i - 1], c[i], c[i + 1], 1000))
+    }
+    result.push(c[c.length - 1]);
+    layer.addPrimitive(new Line(result))
+})
+
+
+
 
 
 
@@ -76,19 +123,5 @@ function testPrimitives() {
         )
         requestAnimationFrame(upd)
     })
-// let toggle = false;
-//
-// setInterval(() => {
-//     toggle = !toggle;
-//     if (toggle){
-//         geo.addLayer(layer2)
-//         geo.removeLayer(layer1)
-//
-//     } else {
-//         geo.removeLayer(layer2)
-//         geo.addLayer(layer1)
-//     }
-//     tr2.setVisible(!toggle)
-//
-// },1000)
+
 }

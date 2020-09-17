@@ -20,7 +20,6 @@ export class CesiumSetup {
         this.translateTextMonkeyPatch();
         this.listenerForImageryChangeCrutch();
         this.hideUnnecessaryElements();
-
     }
 
     protected disableEntitySelection() {
@@ -93,7 +92,16 @@ export class CesiumSetup {
             '.cesium-viewer-fullscreenContainer',
         ].join(',')
 
-        document.querySelectorAll(selector)
+        this.cesium.container.querySelectorAll(selector)
             .forEach(node => node.remove());
+    }
+
+    addButton(src: string, callback: () => void) {
+        const button = document.createElement('button');
+        button.className = "cesium-button cesium-toolbar-button";
+        button.onclick = callback;
+        button.innerHTML = `<img src="${src}">`
+        this.cesium.container.querySelector('.cesium-viewer-toolbar')
+            .append(button);
     }
 }

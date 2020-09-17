@@ -9,11 +9,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@turf/along": "^6.0.1",
     "esbuild": "^0.6.12"
   },
   "dependencies": {
+    "@turf/bezier-spline": "^6.0.3",
     "@turf/ellipse": "^5.1.5",
     "cesium": "^1.72.0",
+    "turf-linestring": "^1.0.2",
     "turf-point": "^2.0.1"
   }
 }

@@ -11,7 +11,7 @@ import {CesiumEditor} from "./editor/CesiumEditor";
 
 export class CesiumGeo extends CesiumSetup implements Geo {
 
-    constructor(domElement:HTMLDivElement, lon:number, lat:number, size:number) {
+    constructor(domElement:HTMLElement, lon:number, lat:number, size:number) {
         super(domElement,lon, lat, size);
         new MouseOverSupport(this.cesium)
     }
@@ -60,6 +60,10 @@ export class CesiumGeo extends CesiumSetup implements Geo {
 
     createEditor(): GeoEditor {
         return new CesiumEditor(this.cesium);
+    }
+
+    addButton(src: string, callback: () => void): void {
+        super.addButton(src, callback)
     }
 
 }

@@ -6,4 +6,6 @@ export interface Geo {
     addLayer(layer: GeoLayer): void;
     removeLayer(layer: GeoLayer): void
     createEditor(): GeoEditor;
+    addButton(src: string, param2: () => void): void;
+
 }

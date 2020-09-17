@@ -25,6 +25,8 @@ build({
 }).catch(() => process.exit(1));
 
 
+
+
 //copy resources
 copyFolderSync('node_modules/cesium/Build/Cesium', 'dist/Cesium');
 
