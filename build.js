@@ -49,7 +49,7 @@ fs.writeFileSync('dist/index.html', `
 
 function copyFolderSync(from, to) {
    !fs.existsSync(to) && fs.mkdirSync(to);
-    fs.readdirSync(from).forEach(element => {
+   fs.readdirSync(from).forEach(element => {
         if (fs.lstatSync(path.join(from, element)).isFile()) {
             fs.copyFileSync(path.join(from, element), path.join(to, element));
         } else {

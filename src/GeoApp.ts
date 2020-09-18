@@ -5,23 +5,28 @@ import {Model} from "./api/primitives/Model";
 import {EditorMode} from "./api/editor/EditorMode";
 import InlineSVG from "./api/core/InlineSVG";
 import {GeoEditor} from "./api/editor/GeoEditor";
-import turfAlong from "@turf/along";
-import lineString from "turf-linestring";
 import {Line} from "./api/primitives/Line";
+import {GeoPrimitive} from "./api/core/GeoPrimitive";
+
+import turfAlong from "@turf/along";
+import turfDistance from "@turf/distance";
+import turfLineString from "turf-linestring";
+
 import {
     Cartesian3,
-    ClockRange, Entity,
+    ClockRange,
+    Entity,
     JulianDate,
     LinearApproximation,
-    SampledPositionProperty, VelocityOrientationProperty
+    SampledPositionProperty,
+    VelocityOrientationProperty
 } from "cesium";
-import {GeoPrimitive} from "./api/core/GeoPrimitive";
 
 
 document.body.innerHTML += `
     <div style="position: fixed; top:45px; right: 5px">
         <input type="range" 
-               min="1000" max="20000" step="100" value="3000" 
+               min="0" max="20000" step="100" value="3000" 
                id="cornerSize" 
                style="width:200px">
     </div>
@@ -37,10 +42,15 @@ const geo: Geo = new CesiumGeo(domElement, lon, lat, 10);
 let layer = geo.createLayer();
 geo.addLayer(layer);
 const geoEditor: GeoEditor = geo.createEditor();
-geoEditor.setMode(EditorMode.LINE_3D);
 
+let editorIsOn = false;
 let trajectory: GeoPrimitive;
 let plane: Entity;
+
+geo.addButton(InlineSVG.smallCross('white'), () => {
+    editorIsOn = !editorIsOn;
+    geoEditor.setMode(editorIsOn ? EditorMode.LINE_3D : EditorMode.OFF);
+})
 
 geo.addButton(InlineSVG.smallCross('red'), () => {
     let flyPath: Coordinate[] = roundCorners(geoEditor.getData());
@@ -82,7 +92,7 @@ function updatePrimitives(flyPath: Coordinate[]) {
 
 function roundCorners(c: Coordinate[]) {
     let result = [c[0]];
-    let corner = (<HTMLInputElement>document.getElementById('cornerSize')).value;
+    let corner = +(<HTMLInputElement>document.getElementById('cornerSize')).value;
     for (let i = 1; i < c.length - 1; i++)
         result.push(...calcRoundCorner(c[i - 1], c[i], c[i + 1], corner));
     result.push(c[c.length - 1]);
@@ -95,8 +105,7 @@ function configureTimeline(start: JulianDate, travelTime: number) {
     viewer.clock.startTime = start.clone();
     viewer.clock.stopTime = stop.clone();
     viewer.clock.currentTime = start.clone();
-    viewer.clock.clockRange = ClockRange.LOOP_STOP; //Loop at the end
-    viewer.clock.multiplier = 10;
+    viewer.clock.clockRange = ClockRange.CLAMPED; //Loop at the end
     viewer.timeline.zoomTo(start, stop);
 }
 
@@ -105,17 +114,24 @@ function bezier1d(p0, p1, p2, t) {
 }
 
 function along(from, to, dist) {
-    const line = lineString([from, to]);
+    const line = turfLineString([from, to]);
     const options = {units: 'kilometers'};
     const along = turfAlong(line, dist/1000, options).geometry.coordinates;
-    return new Coordinate(...along, from[2])
+    let totalDistance = turfDistance(from, to, options)*1000;
+    let t = dist / totalDistance;
+    const altitude = lerp(from[2], to[2], t)
+    return new Coordinate(...along, altitude)
+}
+
+function lerp(a, b, t) {
+    return a + (b - a)*t;
 }
 
 function calcRoundCorner(p0: Coordinate, p1: Coordinate, p2: Coordinate, size) {
     p0 = along(p1, p0, size);
     p2 = along(p1, p2, size);
     const roundCorner = [];
-    for (let i = 0; i <= 1; i += 0.1) {
+    for (let i = 0; i <= 1; i += 0.025) {
         roundCorner.push(new Coordinate(
             bezier1d(p0[0], p1[0], p2[0], i),
             bezier1d(p0[1], p1[1], p2[1], i),

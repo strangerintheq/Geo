@@ -164,12 +164,21 @@ export class CesiumEditor implements GeoEditor {
             return;
         if (this.pickedLine) {
             let pointIndex = +this.pickedLine.id.split('_').pop();
-            this.addEditorPoint(this.insertPoint.position['_value'], pointIndex);
+            let pos = this.insertPoint.position['_value'];
+            this.addEditorPoint(pos, pos, pointIndex);
             this.insertPoint.show = false;
             this.pickedLine = null;
         } else {
-            let globePoint = this.pickPosition(screenPoint);
-            this.addEditorPoint(globePoint);
+            let groundPosition = this.pickPosition(screenPoint);
+            let position = groundPosition;
+            if (this.allPoints.length) {
+                let lastPoint = this.allPoints[this.allPoints.length-1].position['_value'];
+                let globeCartographic = Cartographic.fromCartesian(position);
+                let lastPointCartographic = Cartographic.fromCartesian(lastPoint);
+                globeCartographic.height = lastPointCartographic.height;
+                position = Cartographic.toCartesian(globeCartographic);
+            }
+            this.addEditorPoint(position, groundPosition);
         }
 
         this.updateMouseCursor()
@@ -195,7 +204,9 @@ export class CesiumEditor implements GeoEditor {
         });
     }
 
-    private addEditorPoint(position: Cartesian3, insertIndex: number = null): void {
+    private addEditorPoint(position: Cartesian3,
+                           groundPosition: Cartesian3,
+                           insertIndex: number = null): void {
 
         let id = Math.random().toString(36).substring(2);
 
@@ -207,7 +218,7 @@ export class CesiumEditor implements GeoEditor {
 
         let groundPoint = this.editorLayer.entities.add({
             id: 'ground_point_' + id,
-            position,
+            position:groundPosition,
             billboard: this.billboardParams(SvgImages.dot3(), true)
         });
 
@@ -239,7 +250,7 @@ export class CesiumEditor implements GeoEditor {
 
         this.updateEditorLines();
 
-        this.pickedPoint = anchorPoint;
+        this.pickedPoint = groundPoint;
 
         this.updateTooltipForPoint(this.pickedPoint)
     }
