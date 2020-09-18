@@ -30,24 +30,28 @@ export class CesiumLayer extends GeoLayerBase {
     }
 
      addPrimitive(geoPrimitive: GeoPrimitive): Link {
+        let link:Link;
         if (geoPrimitive.type === GeoPrimitiveType.LINE)
-            return this.cesiumLine(<Line>geoPrimitive)
+            link =  this.cesiumLine(<Line>geoPrimitive);
 
         if (geoPrimitive.type === GeoPrimitiveType.POINT_SET)
-            return this.cesiumPointSet(<PointSet>geoPrimitive);
+            link =  this.cesiumPointSet(<PointSet>geoPrimitive);
 
         if (geoPrimitive.type === GeoPrimitiveType.AREA)
-            return this.cesiumPolygon(<Line>geoPrimitive)
+            link =  this.cesiumPolygon(<Line>geoPrimitive);
 
         if (geoPrimitive.type === GeoPrimitiveType.TITLE)
-            return this.cesiumTitle(<Title>geoPrimitive)
+            link =  this.cesiumTitle(<Title>geoPrimitive);
 
         if (geoPrimitive.type === GeoPrimitiveType.MODEL)
-            return this.cesiumModel(<Model>geoPrimitive)
+            link =  this.cesiumModel(<Model>geoPrimitive);
+
+         geoPrimitive.setLink(link);
+         return link
     }
 
-     removePrimitive(primitive: GeoPrimitive): void {
-
+    removePrimitive(primitive: GeoPrimitive): void {
+        this.dataSource.entities.remove(primitive.link['entity'])
     }
 
 

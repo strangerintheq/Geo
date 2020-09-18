@@ -87,8 +87,8 @@ export class CesiumSetup {
     private hideUnnecessaryElements() {
         let selector = [
             '.cesium-viewer-bottom',
-            '.cesium-viewer-animationContainer',
-            '.cesium-viewer-timelineContainer',
+            // '.cesium-viewer-animationContainer',
+            // '.cesium-viewer-timelineContainer',
             '.cesium-viewer-fullscreenContainer',
         ].join(',')
 
