@@ -2,5 +2,4 @@
 /src/**/*.map
 node_modules
 estimation
-dist
 .idea

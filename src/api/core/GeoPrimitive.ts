@@ -10,6 +10,7 @@ export abstract class GeoPrimitive {
     link: Link;
     coordinates: Coordinate[];
     tooltip: string;
+    color: string;
 
 
     protected constructor(type: GeoPrimitiveType) {

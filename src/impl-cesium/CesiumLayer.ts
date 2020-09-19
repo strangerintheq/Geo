@@ -77,7 +77,7 @@ export class CesiumLayer extends GeoLayerBase {
             mouseOverText: area.tooltip,
             polygon: {
                 hierarchy: area.coordinates.map(DegreesToCartesian3),
-                material : Color.RED.withAlpha(0.5),
+                material : Color.fromCssColorString(area.color),
             }
         });
     }

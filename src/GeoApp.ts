@@ -21,31 +21,43 @@ import {
     SampledPositionProperty,
     VelocityOrientationProperty
 } from "cesium";
+import {Area} from "./api/primitives/Area";
 
 
 document.body.innerHTML += `
     <div style="position: fixed; top:45px; right: 5px">
+        <input id="cornerSizeDisplay" value="1000" style="width:50px">
         <input type="range" 
-               min="0" max="20000" step="100" value="3000" 
+               min="0" max="5000" step="100" value="1000" 
                id="cornerSize" 
-               style="width:200px">
+               style="width:200px;" 
+               oninput="cornerSizeDisplay.value=this.value">
     </div>
 `;
 
 window['CESIUM_BASE_URL'] = 'http://localhost:63342/Geo/dist/Cesium';
 
-const lon = 30;
-const lat = 60;
+const params = new URLSearchParams(document.location.search)
+
+const lon = +params.get('lon') || 30;
+const lat = +params.get('lat') || 60;
 
 const domElement: HTMLElement = document.querySelector('#cesium');
-const geo: Geo = new CesiumGeo(domElement, lon, lat, 10);
+const geo: Geo = new CesiumGeo(domElement, lon, lat, 0.1);
+const geoEditor: GeoEditor = geo.createEditor();
+
 let layer = geo.createLayer();
 geo.addLayer(layer);
-const geoEditor: GeoEditor = geo.createEditor();
+
 
 let editorIsOn = false;
 let trajectory: GeoPrimitive;
 let plane: Entity;
+
+addRect(lon, lat, 0.00001, 0.009, '#ffffff');
+for (let i=-8; i<=8; i+=2)
+    i && addRect(lon-0.0001*i, lat-0.0094, 0.00005, 0.0005, '#ffffff');
+addRect(lon, lat, 0.001, 0.01, '#999999');
 
 geo.addButton(InlineSVG.smallCross('white'), () => {
     editorIsOn = !editorIsOn;
@@ -53,12 +65,27 @@ geo.addButton(InlineSVG.smallCross('white'), () => {
 })
 
 geo.addButton(InlineSVG.smallCross('red'), () => {
-    let flyPath: Coordinate[] = roundCorners(geoEditor.getData());
+    let data = geoEditor.getData();
+    if (!data.length)
+        return
+    let flyPath: Coordinate[] = roundCorners(data);
     updatePrimitives(flyPath);
     let start = JulianDate.fromDate(new Date());
     let travelTime = configureFlyPath(flyPath, start);
     configureTimeline(start, travelTime);
 });
+
+function addRect(lon, lat, w, h, color) {
+    let airportCoords = [
+        [lon + w, lat + h],
+        [lon + w, lat - h],
+        [lon - w, lat - h],
+        [lon - w, lat + h],
+    ].map(p => new Coordinate(...p));
+    let airport = new Area(airportCoords);
+    airport.color = color
+    layer.addPrimitive(airport)
+}
 
 function configureFlyPath(result: Coordinate[], start: JulianDate) {
     let spp = plane.position = new SampledPositionProperty();
@@ -81,7 +108,10 @@ function configureFlyPath(result: Coordinate[], start: JulianDate) {
 
 function updatePrimitives(flyPath: Coordinate[]) {
     if (plane) {
-        layer.removePrimitive(trajectory);
+        try {
+            layer.removePrimitive(trajectory);
+        } catch (e) {
+        }
     } else {
         let model = new Model(new Coordinate(), "Cesium_Air.glb");
         plane = layer.addPrimitive(model)['entity'];
@@ -92,7 +122,7 @@ function updatePrimitives(flyPath: Coordinate[]) {
 
 function roundCorners(c: Coordinate[]) {
     let result = [c[0]];
-    let corner = +(<HTMLInputElement>document.getElementById('cornerSize')).value;
+    let corner = +(<HTMLInputElement>document.getElementById('cornerSizeDisplay')).value;
     for (let i = 1; i < c.length - 1; i++)
         result.push(...calcRoundCorner(c[i - 1], c[i], c[i + 1], corner));
     result.push(c[c.length - 1]);
@@ -116,9 +146,10 @@ function bezier1d(p0, p1, p2, t) {
 function along(from, to, dist) {
     const line = turfLineString([from, to]);
     const options = {units: 'kilometers'};
+    const totalDistance = turfDistance(from, to, options)*1000;
+    dist = Math.min(dist, totalDistance / 2);
     const along = turfAlong(line, dist/1000, options).geometry.coordinates;
-    let totalDistance = turfDistance(from, to, options)*1000;
-    let t = dist / totalDistance;
+    const t = dist / totalDistance;
     const altitude = lerp(from[2], to[2], t)
     return new Coordinate(...along, altitude)
 }
