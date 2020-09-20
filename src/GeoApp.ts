@@ -35,7 +35,10 @@ document.body.innerHTML += `
     </div>
 `;
 
-window['CESIUM_BASE_URL'] = 'http://localhost:63342/Geo/dist/Cesium';
+
+let cesiumUrl = document.location.origin + document.location.pathname + '/Cesium';
+console.log(cesiumUrl);
+window['CESIUM_BASE_URL'] = cesiumUrl;
 
 const params = new URLSearchParams(document.location.search)
 
