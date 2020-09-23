@@ -29,6 +29,8 @@ build({
 
 //copy resources
 copyFolderSync('node_modules/cesium/Build/Cesium', 'dist/Cesium');
+fs.unlinkSync('dist/Cesium/Cesium.js')
+fs.unlinkSync('dist/Cesium/Cesium.d.ts')
 
 //create html
 fs.writeFileSync('dist/index.html', `

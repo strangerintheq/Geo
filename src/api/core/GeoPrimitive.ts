@@ -11,6 +11,7 @@ export abstract class GeoPrimitive {
     coordinates: Coordinate[];
     tooltip: string;
     color: string;
+    texture: string;
 
 
     protected constructor(type: GeoPrimitiveType) {

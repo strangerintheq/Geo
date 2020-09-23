@@ -13,11 +13,11 @@ import turfDistance from "@turf/distance";
 import turfLineString from "turf-linestring";
 
 import {
-    Cartesian3,
+    Cartesian3, ClassificationType,
     ClockRange,
     Entity,
     JulianDate,
-    LinearApproximation,
+    LinearApproximation, Rectangle,
     SampledPositionProperty,
     VelocityOrientationProperty
 } from "cesium";
@@ -36,18 +36,31 @@ document.body.innerHTML += `
 `;
 
 
-let cesiumUrl = document.location.origin + document.location.pathname + '/Cesium';
+let dir = document.location.pathname;
+if (dir.endsWith('.html')){
+    const dirParts = dir.split('/');
+    dirParts.pop()
+    dir = dirParts.join('/')
+}
+
+let cesiumUrl = document.location.origin + dir + '/Cesium';
 console.log(cesiumUrl);
 window['CESIUM_BASE_URL'] = cesiumUrl;
 
 const params = new URLSearchParams(document.location.search)
 
-const lon = +params.get('lon') || 30;
-const lat = +params.get('lat') || 60;
+const lon = +params.get('lon') || 68.3314929;
+const lat = +params.get('lat') || 70.32;
+const angle = +params.get('angle') || 0;
+
+// const w = 0.0671/3;
+// let h = 0.0025/3;
+// h *= Math.cos(lat/180*Math.PI)
 
 const domElement: HTMLElement = document.querySelector('#cesium');
 const geo: Geo = new CesiumGeo(domElement, lon, lat, 0.1);
 const geoEditor: GeoEditor = geo.createEditor();
+let viewer = geo['cesium'];
 
 let layer = geo.createLayer();
 geo.addLayer(layer);
@@ -57,10 +70,19 @@ let editorIsOn = false;
 let trajectory: GeoPrimitive;
 let plane: Entity;
 
-addRect(lon, lat, 0.00001, 0.009, '#ffffff');
-for (let i=-8; i<=8; i+=2)
-    i && addRect(lon-0.0001*i, lat-0.0094, 0.00005, 0.0005, '#ffffff');
-addRect(lon, lat, 0.001, 0.01, '#999999');
+
+// viewer.entities.add({
+//     name: "Rotating rectangle with rotating texture coordinate",
+//     rectangle: {
+//         coordinates: Rectangle.fromDegrees(lon-w, lat-h, lon+w, lat+h),
+//         material: "airport.svg",
+//         classificationType: ClassificationType.TERRAIN,
+//     },
+// });
+
+
+// addAirportPrimitives();
+
 
 geo.addButton(InlineSVG.smallCross('white'), () => {
     editorIsOn = !editorIsOn;
@@ -78,17 +100,7 @@ geo.addButton(InlineSVG.smallCross('red'), () => {
     configureTimeline(start, travelTime);
 });
 
-function addRect(lon, lat, w, h, color) {
-    let airportCoords = [
-        [lon + w, lat + h],
-        [lon + w, lat - h],
-        [lon - w, lat - h],
-        [lon - w, lat + h],
-    ].map(p => new Coordinate(...p));
-    let airport = new Area(airportCoords);
-    airport.color = color
-    layer.addPrimitive(airport)
-}
+
 
 function configureFlyPath(result: Coordinate[], start: JulianDate) {
     let spp = plane.position = new SampledPositionProperty();
@@ -134,7 +146,7 @@ function roundCorners(c: Coordinate[]) {
 
 function configureTimeline(start: JulianDate, travelTime: number) {
     let stop = JulianDate.addSeconds(start, travelTime, new JulianDate());
-    let viewer = geo['cesium'];
+
     viewer.clock.startTime = start.clone();
     viewer.clock.stopTime = stop.clone();
     viewer.clock.currentTime = start.clone();
@@ -175,6 +187,24 @@ function calcRoundCorner(p0: Coordinate, p1: Coordinate, p2: Coordinate, size) {
     return roundCorner;
 }
 
+function addAirportPrimitives() {
+    addRect(lon, lat, 0.00001, 0.009, '#ffffff');
+    for (let i = -8; i <= 8; i += 2)
+        i && addRect(lon - 0.0001 * i, lat - 0.0094, 0.00005, 0.0005, '#ffffff');
+    addRect(lon, lat, 0.001, 0.01, '#999999');
+}
+
+function addRect(lon, lat, w, h, color) {
+    let airportCoords = [
+        [lon + w, lat + h],
+        [lon + w, lat - h],
+        [lon - w, lat - h],
+        [lon - w, lat + h],
+    ].map(p => new Coordinate(...p));
+    let airport = new Area(airportCoords);
+    airport.color = color
+    layer.addPrimitive(airport)
+}
 
 // requestAnimationFrame(function upd(t) {
 //     if (model) {

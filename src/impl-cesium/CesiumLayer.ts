@@ -5,7 +5,6 @@ import {
     PolylineGlowMaterialProperty, Transforms,
 } from "cesium";
 
-import {GeoLayer} from "../api/core/GeoLayer";
 import {GeoPrimitive} from "../api/core/GeoPrimitive";
 import {GeoPrimitiveType} from "../api/core/GeoPrimitiveType";
 import {Line} from "../api/primitives/Line";
@@ -73,11 +72,17 @@ export class CesiumLayer extends GeoLayerBase {
     }
 
     private cesiumPolygon(area: Area): CesiumLink {
+        let material = area.texture ? {
+            // image: {
+                image: { uri: area.texture },
+                // color: cesiumColor,
+            // },
+        } : Color.fromCssColorString(area.color);
         return this.addLinkedEntity({
             mouseOverText: area.tooltip,
             polygon: {
                 hierarchy: area.coordinates.map(DegreesToCartesian3),
-                material : Color.fromCssColorString(area.color),
+                material,
             }
         });
     }
