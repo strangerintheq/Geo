@@ -58,7 +58,7 @@ export class CesiumEditor implements GeoEditor {
 
     getData(): Array<Coordinate> {
         return this.allPoints.map(p => {
-            let cartesian = p.position['_value'];
+            let cartesian = this.extractPosition(p);
             let cartographic = Cartographic.fromCartesian(cartesian);
             return new Coordinate(
                 cartographic.longitude/Math.PI*180,
@@ -181,7 +181,7 @@ export class CesiumEditor implements GeoEditor {
         let groundPosition = this.pickPosition(screenPoint);
         let position = groundPosition;
         if (this.allPoints.length) {
-            let lastPoint = this.allPoints[this.allPoints.length - 1].position['_value'];
+            let lastPoint = this.extractPosition(this.allPoints[this.allPoints.length - 1]);
             let globeCartographic = Cartographic.fromCartesian(position);
             let lastPointCartographic = Cartographic.fromCartesian(lastPoint);
             globeCartographic.height = lastPointCartographic.height;
@@ -247,8 +247,8 @@ export class CesiumEditor implements GeoEditor {
                 width: 2.0,
                 material: new Color(0,1,0),
                 positions: new CallbackProperty(() => {
-                    arr[0] = groundPoint.position['_value'];
-                    arr[1] = anchorPoint.position['_value'];
+                    arr[0] = this.extractPosition(groundPoint);
+                    arr[1] = this.extractPosition(anchorPoint);
                     return arr;
                 }, false)
             }
@@ -291,7 +291,7 @@ export class CesiumEditor implements GeoEditor {
     private updateTooltipForPoint(point) {
         this.tooltipEntity.show = !!point;
         if (point) {
-            let cartographic = Cartographic.fromCartesian(point.position['_value']);
+            let cartographic = Cartographic.fromCartesian(this.extractPosition(point));
             let lat = this.formatDeg(cartographic.latitude);
             let lon = this.formatDeg(cartographic.longitude);
             // @ts-ignore
@@ -332,7 +332,7 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private extractPoint(idParts: string[]){
-        return Cartographic.fromCartesian(this.allPoints[+idParts.pop()].position['_value']);
+        return Cartographic.fromCartesian(this.extractPosition(this.allPoints[+idParts.pop()]));
     }
 
     private pickEditorEntity(screenPoint: Cartesian2) {
@@ -377,7 +377,7 @@ export class CesiumEditor implements GeoEditor {
     }
 
     private getHeightAboveSurface(point:Entity):number {
-        return Cartographic.fromCartesian(point.position['_value']).height
+        return Cartographic.fromCartesian(this.extractPosition(point)).height
     }
 
     private assignPointPosition(point:any, p:Cartesian3){
@@ -424,8 +424,8 @@ export class CesiumEditor implements GeoEditor {
         });
 
         let positions = new CallbackProperty(() => {
-            arr[0] = p0.position['_value'];
-            arr[1] = p1.position['_value'];
+            arr[0] = this.extractPosition(p0);
+            arr[1] = this.extractPosition(p1);
             return arr;
         }, false);
 
@@ -473,7 +473,7 @@ export class CesiumEditor implements GeoEditor {
         if (this.pickedPoint.id.indexOf('ground')>-1)
             return
 
-        let movingPointPosition = this.pickedPoint.position['_value'];
+        let movingPointPosition = this.extractPosition(this.pickedPoint);
 
         let cartographic = Cartographic.fromCartesian(movingPointPosition);
         // cartographic.height = 0;
