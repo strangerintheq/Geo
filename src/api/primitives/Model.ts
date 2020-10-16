@@ -10,7 +10,7 @@ export class Model extends Point {
     pitch: number = 0;
     roll: number = 0;
 
-    constructor(coordinate: Coordinate, url: string, tooltip :string = null) {
+    constructor(coordinate: Coordinate, url: string, tooltip :string) {
         super(coordinate, tooltip);
         this.url = url;
         this.type = GeoPrimitiveType.MODEL;

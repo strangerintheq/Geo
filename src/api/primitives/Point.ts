@@ -4,10 +4,10 @@ import {Coordinate} from "../core/Coordinate";
 
 export class Point extends GeoPrimitive {
 
-    constructor(coordinate: Coordinate, tooltip :string = null) {
+    constructor(coordinate: Coordinate, tooltip :string ) {
         super(GeoPrimitiveType.POINT);
         this.coordinates = [coordinate];
-        this.tooltip = tooltip;
+        this.tooltip = tooltip || undefined;
     }
 
 }

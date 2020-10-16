@@ -51,8 +51,8 @@ export class MouseOverSupport {
     }
 
     if (!text) {
-        this.entity.show = false;
-        return;
+      this.entity.show = false;
+      return;
     }
 
     let mousePosition = this.cesiumViewer.camera.pickEllipsoid(movement.endPosition);
@@ -76,7 +76,7 @@ export class MouseOverSupport {
         text += '\n Высота: ' + h + 'м';
     }
 
-    this.entity.label.text = text;
+    this.entity.label && this.entity.label.text && (this.entity.label.text = text);
     this.entity.position = mousePosition || entityPosition;
     this.entity.show = true;
 

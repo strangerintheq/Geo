@@ -101,7 +101,7 @@ export class CesiumSetup {
         button.className = "cesium-button cesium-toolbar-button";
         button.onclick = callback;
         button.innerHTML = `<img src="${src}">`
-        this.cesium.container.querySelector('.cesium-viewer-toolbar')
-            .append(button);
+        const el =this.cesium.container.querySelector('.cesium-viewer-toolbar');
+        el && el.append(button);
     }
 }

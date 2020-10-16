@@ -5,13 +5,13 @@ import {Link} from "./Link";
 export abstract class GeoPrimitive {
 
     type: GeoPrimitiveType;
-    image: string;
-    text: string;
-    link: Link;
-    coordinates: Coordinate[];
-    tooltip: string;
-    color: string;
-    texture: string;
+    image?: string;
+    text?: string;
+    link?: Link;
+    coordinates?: Coordinate[];
+    tooltip?: string;
+    color?: string;
+    texture?: string;
 
 
     protected constructor(type: GeoPrimitiveType) {
@@ -19,7 +19,7 @@ export abstract class GeoPrimitive {
     }
 
     setVisible(isVisible: boolean): void {
-        this.link.setVisible(isVisible);
+        this.link?.setVisible(isVisible);
     }
 
     setLink(link: Link) {
