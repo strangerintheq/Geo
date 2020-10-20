@@ -16,7 +16,7 @@ export class CesiumGeo extends CesiumSetup implements Geo {
         new MouseOverSupport(this.cesium)
     }
 
-     addBillboardCollection(geoPrimitive: GeoPrimitive, data:any[]){
+    addBillboardCollection(geoPrimitive: GeoPrimitive, data:any[]){
         let bc = new BillboardCollection();
         if (geoPrimitive.tooltip)
             bc['mouseOverText'] = geoPrimitive.tooltip;
@@ -25,10 +25,10 @@ export class CesiumGeo extends CesiumSetup implements Geo {
         (<CesiumLink>geoPrimitive.link).billboardCollection = bc;
     }
 
-     removeBillboardCollection(geoPrimitive: GeoPrimitive) {
+    removeBillboardCollection(geoPrimitive: GeoPrimitive) {
         let link = <CesiumLink>geoPrimitive.link;
         this.cesium.scene.primitives.remove(link.billboardCollection)
-        link.billboardCollection = null;
+        link.billboardCollection = undefined;
     }
 
     addLayer(layer: GeoLayer): void {
@@ -37,7 +37,7 @@ export class CesiumGeo extends CesiumSetup implements Geo {
         let cesiumLayer = <CesiumLayer>layer;
         this.cesium.dataSources.add(cesiumLayer.dataSource);
         [...cesiumLayer.billboardCollectionsData.keys()].forEach(geoPrimitive => {
-            this.addBillboardCollection(geoPrimitive,
+            geoPrimitive && this.addBillboardCollection(geoPrimitive,
                 cesiumLayer.billboardCollectionsData.get(geoPrimitive));
         });
         layer.added = true;

@@ -8,11 +8,11 @@ import {
     Viewer
 } from "cesium";
 
-export class CesiumSetup {
+export abstract class CesiumSetup {
 
     readonly cesium: Viewer;
 
-    constructor(domElement: HTMLElement, lon:number, lat:number, size:number) {
+    protected constructor(domElement: HTMLElement, lon:number, lat:number, size:number) {
         this.setHomeLocation(lon, lat, size);
         this.cesium = new Viewer(domElement);
         this.disableEntitySelection();
