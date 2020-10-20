@@ -28,8 +28,8 @@ export class CesiumLayer extends GeoLayerBase {
         this.cesiumGeo = cesiumGeo;
     }
 
-     addPrimitive(geoPrimitive: GeoPrimitive): Link {
-        let link:Link;
+    addPrimitive(geoPrimitive: GeoPrimitive): Link | undefined{
+        let link:Link|undefined = undefined;
         if (geoPrimitive.type === GeoPrimitiveType.LINE)
             link =  this.cesiumLine(<Line>geoPrimitive);
 
@@ -45,12 +45,14 @@ export class CesiumLayer extends GeoLayerBase {
         if (geoPrimitive.type === GeoPrimitiveType.MODEL)
             link =  this.cesiumModel(<Model>geoPrimitive);
 
-         geoPrimitive.setLink(link);
-         return link
+        link && geoPrimitive.setLink(link);
+        return link
     }
 
     removePrimitive(primitive: GeoPrimitive): void {
-        this.dataSource.entities.remove(primitive.link['entity'])
+        if (this.dataSource && this.dataSource.entities && primitive.link && primitive.link['entity']) {
+            this.dataSource.entities.remove(primitive.link['entity'])
+        }
     }
 
 
@@ -62,76 +64,96 @@ export class CesiumLayer extends GeoLayerBase {
     }
 
     private cesiumTitle(title: Title): CesiumLink{
-        return this.addLinkedEntity({
-            position: DegreesToCartesian3(title.coordinates[0]),
+        const entityData: any = {
             label: {
                 scaleByDistance: new NearFarScalar(1.5e2, .5, 1.5e7, .1),
                 text: title.text,
             },
-        })
+        }
+        if (title && title.coordinates && title.coordinates.length) {
+            entityData.position = DegreesToCartesian3(title.coordinates[0])
+        }
+
+        return this.addLinkedEntity(entityData)
     }
 
     private cesiumPolygon(area: Area): CesiumLink {
         let material = area.texture ? {
             // image: {
-                image: { uri: area.texture },
-                // color: cesiumColor,
+            image: { uri: area.texture },
+            // color: cesiumColor,
             // },
-        } : Color.fromCssColorString(area.color);
+        } : area.color && Color.fromCssColorString(area.color);
+
+        let polygon: any = {
+            material,
+        };
+
+        if (area.coordinates) {
+            polygon.hierarchy = area.coordinates.map(DegreesToCartesian3);
+        };
+
         return this.addLinkedEntity({
             mouseOverText: area.tooltip,
-            polygon: {
-                hierarchy: area.coordinates.map(DegreesToCartesian3),
-                material,
-            }
+            polygon
         });
     }
 
     private cesiumLine(line: Line): CesiumLink {
+        const polyline : any= {
+
+            width: 5.0,
+            material: new PolylineGlowMaterialProperty({
+                color: new Color(1,0,0),
+                glowPower: 0.2
+            })
+        };
+        if (line.coordinates) {
+            polyline.positions =  line.coordinates.map(DegreesToCartesian3)
+        }
         return this.addLinkedEntity({
             mouseOverText: line.tooltip,
-            polyline: {
-                positions: line.coordinates.map(DegreesToCartesian3),
-                width: 5.0,
-                material: new PolylineGlowMaterialProperty({
-                    color: new Color(1,0,0),
-                    glowPower: 0.2
-                })
-            }
+            polyline
         });
     }
 
     private cesiumPointSet(pointSet: PointSet): CesiumLink {
-
-        let billboardCollectionData = pointSet.coordinates.map(coordinate => ({
-            position: DegreesToCartesian3(coordinate),
-            image: pointSet.image
-        }));
-
-        this.billboardCollectionsData.set(pointSet, billboardCollectionData)
-
         let cesiumLink = new CesiumLink(this.cesiumGeo);
         cesiumLink.source = pointSet;
-        cesiumLink.billboardCollectionData = billboardCollectionData;
+
+        if (pointSet.coordinates) {
+            let billboardCollectionData = pointSet.coordinates.map(coordinate => ({
+                position: DegreesToCartesian3(coordinate),
+                image: pointSet.image
+            }));
+
+            this.billboardCollectionsData.set(pointSet, billboardCollectionData)
+            cesiumLink.billboardCollectionData = billboardCollectionData;
+        }
+
         return cesiumLink;
     }
 
     private cesiumModel(model: Model) {
         let heightReference = false ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE;
         let k = Math.PI/180;
+        if (!model || !model.coordinates || !model.coordinates.length)
+            return
         return this.addLinkedEntity({
 
             position: new CallbackProperty(() => {
-                return DegreesToCartesian3(model.coordinates[0])
+                let crd = model && model.coordinates && model.coordinates[0];
+                return crd && DegreesToCartesian3(crd)
             }, false),
 
             orientation: new CallbackProperty(() => {
-                let position = DegreesToCartesian3(model.coordinates[0]);
+                let crd = model && model.coordinates && model.coordinates[0];
+                let position = crd && DegreesToCartesian3(crd);
                 let heading =  (model.heading + model.course)*k;
                 let pitch = model.pitch*k;
                 let roll = model.roll*k;
                 let headingPitchRoll = new HeadingPitchRoll( heading, pitch, roll);
-                return Transforms.headingPitchRollQuaternion(position, headingPitchRoll);
+                return position && Transforms.headingPitchRollQuaternion(position, headingPitchRoll);
             }, false),
 
             model: {
@@ -147,6 +169,6 @@ export class CesiumLayer extends GeoLayerBase {
 
 
 
-function DegreesToCartesian3(pt: number[]) {
-    return Cartesian3.fromDegrees(pt[0], pt[1], pt[2] || 0)
+function DegreesToCartesian3(pt: number[]):Cartesian3 {
+    return Cartesian3.fromDegrees(pt[0], pt[1], pt[2] || 0);
 }

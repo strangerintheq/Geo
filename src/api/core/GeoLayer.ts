@@ -10,7 +10,7 @@ export interface GeoLayer {
     addObject(geoObject: GeoObject): void;
     removeObject(geoObject: GeoObject): void;
 
-    addPrimitive(geoPrimitive: GeoPrimitive): Link;
+    addPrimitive(geoPrimitive: GeoPrimitive): Link | undefined;
     removePrimitive(primitive: GeoPrimitive): void;
 
     setVisible(isVisible: boolean): void;

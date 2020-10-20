@@ -16,17 +16,17 @@ export abstract class GeoLayerBase implements GeoLayer{
         geoObject.primitives.forEach(primitive => this.remove(primitive));
     }
 
-     abstract addPrimitive(geoPrimitive: GeoPrimitive): Link;
+    abstract addPrimitive(geoPrimitive: GeoPrimitive): Link | undefined;
 
     setVisible(isVisible: boolean): void {
         this.primitives.forEach(p => p.setVisible(isVisible));
     };
 
-     abstract removePrimitive(primitive: GeoPrimitive): void;
+    abstract removePrimitive(primitive: GeoPrimitive): void;
 
     add(primitive: GeoPrimitive) {
-        let link: Link = this.addPrimitive(primitive);
-        primitive.setLink(link);
+        let link: Link|undefined = this.addPrimitive(primitive);
+        link && primitive.setLink(link);
         this.primitives.push(primitive);
     }
 

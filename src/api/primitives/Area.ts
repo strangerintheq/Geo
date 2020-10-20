@@ -4,10 +4,10 @@ import {GeoPrimitiveType} from "../core/GeoPrimitiveType";
 
 export class Area extends GeoPrimitive {
 
-    constructor(coordinates: Coordinate[], tooltip:string = null) {
+    constructor(coordinates: Coordinate[], tooltip:string) {
         super(GeoPrimitiveType.AREA);
         this.coordinates = coordinates;
-        this.tooltip = tooltip;
+        this.tooltip = tooltip || undefined;
     }
 
 }
